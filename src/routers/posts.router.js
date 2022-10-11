@@ -4,8 +4,6 @@ import express from "express";
 
 import * as postsUsesCases from "../useCases/posts.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
-import {Post} from '../models/posts.model.js'
-import {Autor} from '../models/autors.model.js'
 
 const router = express.Router();
 
@@ -63,36 +61,26 @@ router.get("/:idPost", async (request, response, next) => {
 //POST /Posts
 router.post("/", async (request, response, next) => {
 
-    const {description, important = false, idAutor} = request.body
-    if (!description) {
-        throw new StatusHttp("post no encontrado");
-      }
-/*     const postCreated = await postsUsesCases.create(newPost);
- */   
-      const autor = await Autor.findById(idAutor)
-
-      const newPost = new Post ({
-        description, 
-        date: new Date(),
-        important, 
-        autor: autor._id
-      })
-
-      try{
-        const savedPost = await newPost.save()
-        autor.posts = autor.posts.concat(savedPost._id)
-        await autor.save
+    try {
+      const newPost = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
+      const postCreated = await postsUsesCases.create(newPost);
+      console.log(postCreated);
+/*         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
+ */        
+    
         response.json({
-            succes: true,
-            msg: "post creado",
-            data: savedPost,
-          });
-      }catch{
-        next(error)
+          success: true,
+          message: "post creado",
+          data: {
+            posts: postCreated,
+          },
+        });
+      } catch (error) {
+        next(error);
       }
-   
+    });
   
-});
+
 
 
 router.delete("/:idPost", async (request, response, next) => {

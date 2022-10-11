@@ -1,10 +1,8 @@
 import mongoose from "mongoose"
-import {Autor} from './autors.model.js'
-
 
 const postSchema = new mongoose.Schema({ //recibirá un objeto
     autor: {
-        type: String
+        type: String, 
     },
     title: {
         type: String, 
@@ -13,15 +11,22 @@ const postSchema = new mongoose.Schema({ //recibirá un objeto
         maxLength: 500,
         trim: true 
     },
-    createDate: {
-        type: Date, 
-        required: true
-    },
     description: {
         type: String, 
         required: true,
-    }
+    },
+    /* comments:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] */
 })
 
-const Post = mongoose.model('Post', postSchema)
+const Post = mongoose.model('posts', postSchema)
 export {Post}
+
+
+
+/* const commentSchema = new mongoose.Schema({
+    text: String,
+    username: String
+})
+
+const Comment = mongoose.model('comment', commentSchema)
+export {Comment} */

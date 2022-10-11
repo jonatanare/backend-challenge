@@ -1,5 +1,6 @@
 import {Post} from '../models/posts.model.js'
 
+
 function getAll(){
     return Post.find({})//regresa la promesa que utilizaré en los routers(presenters)
 }

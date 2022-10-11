@@ -27,5 +27,5 @@ const autorSchema = new mongoose.Schema({ //recibirá un objeto
     }
 })
 
-const Autor = mongoose.model('Autor', autorSchema)
+const Autor = mongoose.model('autors', autorSchema)
 export {Autor}
