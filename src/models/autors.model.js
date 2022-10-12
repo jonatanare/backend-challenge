@@ -24,6 +24,18 @@ const autorSchema = new mongoose.Schema({ //recibirá un objeto
         required: true,
         min: 1,
         max: 100
+    },
+    email: {
+        type: String, 
+        required: true,
+        min: 1,
+        max: 100
+    },
+    password: {
+        type: String, 
+        required: true,
+        min: 1,
+        max: 100
     }
 })
 
