@@ -1,8 +1,9 @@
 import mongoose from "mongoose"
+import {Autor} from '../models/autors.model.js'
 
 const postSchema = new mongoose.Schema({ //recibirá un objeto
     autor: {
-        type: String, 
+        type: mongoose.Schema.Types.ObjectId, ref: 'Autor', required: true 
     },
     title: {
         type: String, 
