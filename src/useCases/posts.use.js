@@ -7,7 +7,7 @@ function getAll(){
 
 
 function create(newPost){
-    return Post.create(newPost).populate('autor', 'name')
+    return Post.create(newPost)
 }
 
 function update(idPost, unupdatedPost){
@@ -23,6 +23,8 @@ function deleteById(idPost){
 }
 
 
+
+
 //export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar 
 
 
@@ -31,5 +33,5 @@ export {
     create,
     update,
     deleteById,
-    getById
+    getById,
 }
