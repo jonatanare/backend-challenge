@@ -1,7 +1,7 @@
 //endpoints
 
 import express from "express";
-import * as autorsUsesCases from "../useCases/autors.use.js";
+import * as authorsUsesCases from "../useCases/authors.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
 
 
@@ -10,7 +10,7 @@ const router = express.Router();
 //Routers o endpoints
 router.get("/", async (request, response, next) => {
   try {
-    const allAutors = await autorsUsesCases.getAll();
+    const allAuthors = await authorsUsesCases.getAll();
  
     const { name, nacionality } = request.query;
 
@@ -28,7 +28,7 @@ router.get("/", async (request, response, next) => {
     response.json({
       succes: true,
       data: {
-        autors: allAutors,
+        authors: allAuthors,
       },
     });
   } catch (error) {
@@ -36,20 +36,20 @@ router.get("/", async (request, response, next) => {
   }
 });
 
-//GET /autors /:id
+//GET /Authors /:id
 
-router.get("/:idAutor", async (request, response, next) => {
+router.get("/:idAuthor", async (request, response, next) => {
     try {
-      const { idAutor } = request.params;
-      const getAutor = await autorsUsesCases.getById(idAutor);
+      const { idAuthor } = request.params;
+      const getAuthor = await authorsUsesCases.getById(idAuthor);
   
-      if (!idAutor) {
-        throw new StatusHttp("autor no encontrado");
+      if (!idAuthor) {
+        throw new StatusHttp("author no encontrado");
       }
       response.json({
         succes: true,
         data: {
-          autor: getAutor,
+          author: getAuthor,
         },
       });
     } catch (error) {
@@ -58,17 +58,17 @@ router.get("/:idAutor", async (request, response, next) => {
   });
   
 
-//POST /Autors
+//POST /Authors
 router.post("/", async (request, response, next) => {
   try {
-    const { body: newAutor } = request;
+    const { body: newAuthor } = request;
 
-    const autorCreated = await autorsUsesCases.create(newAutor);
-    console.log(autorCreated);
+    const authorCreated = await authorsUsesCases.create(newAuthor);
+    console.log(authorCreated);
     response.json({
       succes: true,
-      msg: "autor creado",
-      data: autorCreated,
+      msg: "author creado",
+      data: authorCreated,
     });
   } catch (error) {
    next(error)
@@ -76,19 +76,19 @@ router.post("/", async (request, response, next) => {
 });
 
 
-router.delete("/:idAutor", async (request, response, next) => {
+router.delete("/:idAuthor", async (request, response, next) => {
   try {
-    let { idAutor } = request.params;
-    const autorDeleted = await autorsUsesCases.deleteById(idAutor);
-    console.log(autorDeleted);
-    if (!autorDeleted) {
-      throw new StatusHttp("autor no encontrado");
+    let { idAuthor } = request.params;
+    const authorDeleted = await authorsUsesCases.deleteById(idAuthor);
+    console.log(authorDeleted);
+    if (!authorDeleted) {
+      throw new StatusHttp("author no encontrado");
     }
     response.json({
       succes: true,
       data: {
-        autor: autorDeleted,
-        message:'Este autor ha sido eliminado'
+        author: authorDeleted,
+        message:'Este author ha sido eliminado'
       },
     });
   } catch (error) {
@@ -96,20 +96,20 @@ router.delete("/:idAutor", async (request, response, next) => {
   }
 });
 
-router.patch("/:idAutor", async (request, response) => {
+router.patch("/:idAuthor", async (request, response) => {
   try {
-    const { idAutor } = request.params;
-    const unUpdateAutor = request.body;
-    let autorUpdated = await autorsUsesCases.update(idAutor, unUpdateAutor)
-    console.log(autorUpdated);
+    const { idAuthor } = request.params;
+    const unUpdateAuthor = request.body;
+    let authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
+    console.log(authorUpdated);
 
-    if (!autorUpdated) {
-      throw new StatusHttp("autor no encontrado");
+    if (!authorUpdated) {
+      throw new StatusHttp("author no encontrado");
     }
     response.json({
       succes: true,
       data: {
-        autor: autorUpdated,
+        author: authorUpdated,
       },
     });
   } catch (error) {

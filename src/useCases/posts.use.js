@@ -7,7 +7,7 @@ function getAll(){
 
 
 function create(newPost){
-    return Post.create(newPost).populate('autor', 'name')
+    return Post.create(newPost)
 }
 
 function update(idPost, unupdatedPost){

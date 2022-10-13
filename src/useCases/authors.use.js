@@ -1,25 +1,25 @@
 //acciones que el usuario podrá realizar 
-import {Autor} from '../models/authors.model.js'
+import {Author} from '../models/authors.model.js'
 
 function getAll(){
-    return Autor.find({}) //regresa la promesa que utilizaré en los routers(presenters)
+    return Author.find({}) //regresa la promesa que utilizaré en los routers(presenters)
 }
 
 
-function create(newAutor){
-    return Autor.create(newAutor)
+function create(newAuthor){
+    return Author.create(newASuthor)
 }
 
-function update(idAutor, unupdatedAutor){
-    return Autor.findByIdAndUpdate(idAutor, unupdatedAutor)
+function update(idAuthor, unupdatedAuthor){
+    return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor)
 }
 
-function getById(idAutor){
-    return Autor.findById(idAutor)
+function getById(idAuthor){
+    return Author.findById(idAuthor)
 }
 
-function deleteById(idAutor){
-    return Autor.findByIdAndDelete(idAutor)
+function deleteById(idAuthor){
+    return Author.findByIdAndDelete(idAuthor)
 }
 
 
