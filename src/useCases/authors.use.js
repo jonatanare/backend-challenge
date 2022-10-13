@@ -22,7 +22,7 @@ async function create(newAuthor){
 }
 
 function update(idAuthor, unupdatedAuthor){
-    return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor)
+    return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor, {new:true})
 }
 
 function getById(idAuthor){

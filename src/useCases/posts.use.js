@@ -3,8 +3,9 @@ import  { Author } from '../models/authors.model.js'
 
 
 function getAll(){
-    return Post.find({})//regresa la promesa que utilizaré en los routers(presenters)
-}
+    return Post.find({}).populate({path:'comments', select:['comment']})
+    //return Post.find({}).populate('comments')
+ }
 
 
 async function create(newPost, userCurrent){
@@ -16,7 +17,7 @@ async function create(newPost, userCurrent){
 }
 
 function update(idPost, unupdatedPost){
-    return Post.findByIdAndUpdate(idPost, unupdatedPost)
+    return Post.findByIdAndUpdate(idPost, unupdatedPost, {new:true})
 }
 
 function getById(idPost){

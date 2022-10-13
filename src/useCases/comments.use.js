@@ -17,7 +17,13 @@ async function addComment(newComment, userCurrent){
 
     }
 
+function deleteById(idComment){
+        return Post.findByIdAndDelete(idComment)
+    }
     
+
+
 export {
-        addComment
+        addComment,
+        deleteById
     }

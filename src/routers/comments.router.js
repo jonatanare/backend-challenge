@@ -27,4 +27,24 @@ router.post("/", auth, async (request, response, next) => {
     }
   });
   
+  router.delete("/:idComment", auth, async (request, response, next) => {
+    try {
+      const {idComment} = request.params
+      const commentDeleted = await commentUseCase.deleteById(idComment)
+      console.log(commentDeleted);
+      if (!idComment) {
+        throw new StatusHttp("comment not found");
+      }
+
+      response.json({
+        succes: true,
+        msg: "Comment deleted",
+        data: commentDeleted
+      });
+    } catch (error) {
+        console.log(error);
+     next(error)
+    }
+  });
+
   export default router
