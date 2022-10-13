@@ -98,16 +98,17 @@ router.delete("/:idAuthor", auth,  async (request, response, next) => {
   }
 });
 
-router.patch('/:idAuthor', auth,  async (request, response, next) => {
+router.patch('/:idAuthor',  async (request, response, next) => {
   try {
     const { idAuthor } = request.params
-    const {body} = request;
-    console.log('Body: ',body);
+    console.log(idAuthor);
+    const unUpdateAuthor = request.body;
+    console.log('Body: ',unUpdateAuthor);
 
-    let authorUpdated = await authorsUsesCases.update(idAuthor, body)
+    const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
     console.log('Actualizada',authorUpdated);
 
-    if (!authorUpdated) {
+    if (!unUpdateAuthor) {
       throw new StatusHttp("author no encontrado");
     }
     response.json({

@@ -6,12 +6,12 @@ function getAll(){
 }
 
 
-function create(newPost){
-    return Post.create(newPost)
+function create(newPost, userCurrent){
+    return Post.create({...newPost, author: userCurrent})
 }
 
 function update(idPost, unupdatedPost){
-    return Post.findByIdAndUpdate(idPost, unupdatedPost)
+    return Post.findByIdAndUpdate(idPost, unupdatedPost, {new:true})
 }
 
 function getById(idPost){

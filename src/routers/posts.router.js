@@ -5,6 +5,8 @@ import express from "express";
 import * as postsUsesCases from "../useCases/posts.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
 import { auth } from "../middlewares/auth.js";
+import jwt_decode from "jwt-decode";
+
 
 const router = express.Router();
 
@@ -63,8 +65,13 @@ router.get("/:idPost", async (request, response, next) => {
 router.post("/", async (request, response, next) => {
 
     try {
+
+      const token = request.headers.authorization
+      const {id} = jwt_decode(token);
+      console.log(id);
+      
       const newPost = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
-      const postCreated = await postsUsesCases.create(newPost);
+      const postCreated = await postsUsesCases.create(newPost, id);
       console.log(postCreated);
 /*         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
  */        
@@ -104,12 +111,13 @@ router.delete("/:idPost", async (request, response, next) => {
   }
 });
 
-router.patch("/:idPost", async (request, response) => {
+router.patch("/:idPost", async (request, response, next) => {
   try {
     const { idPost } = request.params;
     const unUpdatePost = request.body;
-    let postUpdated = await postsUsesCases.update(idPost, unUpdatePost)
-    console.log(postUpdated);
+    console.log('unupadetspost', unUpdatePost);
+    const postUpdated = await postsUsesCases.update(idPost, unUpdatePost)
+    console.log('postupdted', postUpdated);
 
     if (!postUpdated) {
       throw new StatusHttp("post no encontrado");
