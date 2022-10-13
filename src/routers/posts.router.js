@@ -3,12 +3,13 @@
 import express from "express";
 
 import * as postsUsesCases from "../useCases/posts.use.js";
-import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
+import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
+import { auth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 //Routers o endpoints
-router.get("/", async (request, response, next) => {
+router.get("/", auth, async (request, response, next) => {
   try {
     const allPosts = await postsUsesCases.getAll();
  
