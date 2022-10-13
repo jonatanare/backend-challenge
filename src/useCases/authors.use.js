@@ -1,5 +1,5 @@
 //acciones que el usuario podrá realizar 
-import {Autor} from '../models/autors.model.js'
+import {Autor} from '../models/authors.model.js'
 
 function getAll(){
     return Autor.find({}) //regresa la promesa que utilizaré en los routers(presenters)
@@ -21,6 +21,7 @@ function getById(idAutor){
 function deleteById(idAutor){
     return Autor.findByIdAndDelete(idAutor)
 }
+
 
 
 //export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar 

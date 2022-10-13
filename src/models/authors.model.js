@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const autorSchema = new mongoose.Schema({ //recibirá un objeto
+const authorSchema = new mongoose.Schema({ //recibirá un objeto
     name: {
         type: String, 
         required: true,
@@ -39,5 +39,5 @@ const autorSchema = new mongoose.Schema({ //recibirá un objeto
     }
 })
 
-const Autor = mongoose.model('Autor', autorSchema)
-export {Autor}
+const Author = mongoose.model('Author', authorSchema)
+export {Author}

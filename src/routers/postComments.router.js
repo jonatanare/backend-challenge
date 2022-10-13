@@ -4,11 +4,10 @@ const router = express.Router();
 
 
 
-router.post("/:post_id/create", async (request, response, next) => {
+router.post("/", async (request, response, next) => {
     try {
       const { body: comment } = request;
-      const {post_id} = request.params;
-      const newPostComment = await postCommentUseCase.createComment(post_id, comment);
+      const newPostComment = await postCommentUseCase.addComment(comment);
      
 
       console.log(newPostComment);
@@ -18,6 +17,7 @@ router.post("/:post_id/create", async (request, response, next) => {
         data: newPostComment
       });
     } catch (error) {
+        console.log(error);
      next(error)
     }
   });
