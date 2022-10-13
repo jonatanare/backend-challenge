@@ -80,7 +80,7 @@ router.post("/",  async (request, response, next) => {
 
 router.delete("/:idAuthor", auth,  async (request, response, next) => {
   try {
-    let { idAuthor } = request.params;
+    const { idAuthor } = request.params;
     const authorDeleted = await authorsUsesCases.deleteById(idAuthor);
     console.log(authorDeleted);
     if (!authorDeleted) {
@@ -90,7 +90,7 @@ router.delete("/:idAuthor", auth,  async (request, response, next) => {
       succes: true,
       data: {
         author: authorDeleted,
-        message:'Este author ha sido eliminado'
+        message:'Author deleted'
       },
     });
   } catch (error) {
@@ -102,14 +102,14 @@ router.patch('/:idAuthor',  async (request, response, next) => {
   try {
     const { idAuthor } = request.params
     console.log(idAuthor);
-    const unUpdateAuthor = request.body;
-    console.log('Body: ',unUpdateAuthor);
+    const unUpdateAuthor = request.body
+    console.log('unupdatedauthor: ',unUpdateAuthor);
 
     const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
     console.log('Actualizada',authorUpdated);
 
     if (!unUpdateAuthor) {
-      throw new StatusHttp("author no encontrado");
+      throw new StatusHttp("author not found");
     }
     response.json({
       succes: true,

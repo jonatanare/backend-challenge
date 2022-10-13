@@ -13,6 +13,8 @@ const router = express.Router();
 router.get("/", async (request, response, next) => {
   try {
     const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']});
+    //const allPosts = await postsUsesCases.getAll().populate('author');
+
     console.log(allPosts);
     const { name, nacionality } = request.query;
 
@@ -64,37 +66,15 @@ router.get("/:idPost", async (request, response, next) => {
 router.post("/", auth, async (request, response, next) => {
   try {
     const token = request.headers.authorization;
-    const {body: newPost} = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
+    const newPost = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
     const { id } = jwt_decode(token);
     console.log('ID: ',id);
     console.log('Body Post: ',newPost);
     const postCreated = await postsUsesCases.create(newPost, id);
     console.log(postCreated);
-    /*         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
-     */
-
-    try {
-
-      const token = request.headers.authorization
-      const {id} = jwt_decode(token);
-      console.log(id);
+    //         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
+     
       
-      const newPost = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
-      const postCreated = await postsUsesCases.create(newPost, id);
-      console.log(postCreated);
-/*         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
- */        
-    
-        response.json({
-          success: true,
-          message: "post creado",
-          data: {
-            posts: postCreated,
-          },
-        });
-      } catch (error) {
-        next(error);
-      }
     response.json({
       success: true,
       message: "post creado",
@@ -136,7 +116,7 @@ router.patch("/:idPost", async (request, response, next) => {
     console.log('postupdted', postUpdated);
     
     if (!postUpdated) {
-      throw new StatusHttp("post no encontrado");
+      throw new StatusHttp("post not found");
     }
     response.json({
       succes: true,
