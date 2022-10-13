@@ -1,7 +1,7 @@
 //endpoints
 
 import express from "express";
-
+import jwt_decode from "jwt-decode";
 import * as postsUsesCases from "../useCases/posts.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
 import { auth } from "../middlewares/auth.js";
@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/", async (request, response, next) => {
   try {
     const allPosts = await postsUsesCases.getAll();
- 
+
     const { name, nacionality } = request.query;
 
     const filters = {};
@@ -26,7 +26,7 @@ router.get("/", async (request, response, next) => {
       filters.nacionality = nacionality;
     }
 
-    console.log(filters); 
+    console.log(filters);
 
     response.json({
       succes: true,
@@ -42,28 +42,38 @@ router.get("/", async (request, response, next) => {
 //GET /posts /:id
 
 router.get("/:idPost", async (request, response, next) => {
-    try {
-      const { idPost } = request.params;
-      const getPost = await postsUsesCases.getById(idPost);
-  
-      if (!idPost) {
-        throw new StatusHttp("Post no encontrado");
-      }
-      response.json({
-        succes: true,
-        data: {
-          post: getPost,
-        },
-      });
-    } catch (error) {
-      next(error)
+  try {
+    const { idPost } = request.params;
+    const getPost = await postsUsesCases.getById(idPost);
+
+    if (!idPost) {
+      throw new StatusHttp("Post no encontrado");
     }
-  });
-  
+    response.json({
+      succes: true,
+      data: {
+        post: getPost,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 //POST /Posts
-router.post("/", async (request, response, next) => {
+router.post("/", auth, async (request, response, next) => {
+  try {
+    const token = request.headers.authorization;
+    const {body: newPost} = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
+    const { id } = jwt_decode(token);
+    console.log('ID: ',id);
+    console.log('Body Post: ',newPost);
+    const postCreated = await postsUsesCases.create(newPost, id);
+    console.log(postCreated);
+    /*         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
+     */
 
+<<<<<<< HEAD
     try {
 
       const token = request.headers.authorization
@@ -86,10 +96,19 @@ router.post("/", async (request, response, next) => {
       } catch (error) {
         next(error);
       }
+=======
+    response.json({
+      success: true,
+      message: "post creado",
+      data: {
+        posts: postCreated,
+      },
+>>>>>>> a225bc2d17b6bc954cc7e0725063082be811901f
     });
-  
-
-
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete("/:idPost", async (request, response, next) => {
   try {
@@ -103,11 +122,11 @@ router.delete("/:idPost", async (request, response, next) => {
       succes: true,
       data: {
         post: postDeleted,
-        message:'Este post ha sido eliminado'
+        message: "Este post ha sido eliminado",
       },
     });
   } catch (error) {
-   next(error)
+    next(error);
   }
 });
 
@@ -115,9 +134,14 @@ router.patch("/:idPost", async (request, response, next) => {
   try {
     const { idPost } = request.params;
     const unUpdatePost = request.body;
+<<<<<<< HEAD
     console.log('unupadetspost', unUpdatePost);
     const postUpdated = await postsUsesCases.update(idPost, unUpdatePost)
     console.log('postupdted', postUpdated);
+=======
+    let postUpdated = await postsUsesCases.update(idPost, unUpdatePost);
+    console.log(postUpdated);
+>>>>>>> a225bc2d17b6bc954cc7e0725063082be811901f
 
     if (!postUpdated) {
       throw new StatusHttp("post no encontrado");
@@ -129,7 +153,7 @@ router.patch("/:idPost", async (request, response, next) => {
       },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 

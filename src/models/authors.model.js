@@ -36,7 +36,11 @@ const authorSchema = new mongoose.Schema({ //recibirá un objeto
         required: true,
         min: 1,
         max: 100
-    }
+    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 })
 
 const Author = mongoose.model('Author', authorSchema)
