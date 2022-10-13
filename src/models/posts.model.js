@@ -1,12 +1,25 @@
 import mongoose from "mongoose"
 
 const postSchema = new mongoose.Schema({ //recibirá un objeto
-<<<<<<< HEAD
+    image: {
+        type: String,
+        default: "https://via.placeholder.com/150",
+        required: false
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Author'
     },
-=======
->>>>>>> a225bc2d17b6bc954cc7e0725063082be811901f
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        required: false
+    },
+
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+        required: false
+    },
     title: {
         type: String, 
         required: false,
@@ -14,6 +27,15 @@ const postSchema = new mongoose.Schema({ //recibirá un objeto
         maxLength: 500,
         trim: true 
     },
+    hashtags:{
+        type:String,
+        required:false, 
+        minLength: 3,
+        maxLength: 500,
+        trim: true
+
+    },
+
     description: {
         type: String, 
         required: false,

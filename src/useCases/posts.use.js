@@ -3,12 +3,13 @@ import  { Author } from '../models/authors.model.js'
 
 
 function getAll(){
-    return Post.find({})//regresa la promesa que utilizaré en los routers(presenters)
-}
+    return Post.find({}).populate({path:'comments', select:['comment']})
+    //return Post.find({}).populate('comments')
+ }
 
 
-async function create(newPost, userCurrent, userCurrent){
-    let postCreated = await Post.create({...{...newPost, author: userCurrent}, author: userCurrent})
+async function create(newPost, userCurrent){
+    let postCreated = await Post.create({...newPost, author: userCurrent})
 
     await Author.findByIdAndUpdate(newPost.author, {$push: {posts: postCreated._id}})
 
