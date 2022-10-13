@@ -1,13 +1,24 @@
 //acciones que el usuario podrá realizar 
-import {Autor} from '../models/autors.model.js'
+import {Autors} from '../models/autors.model.js'
+import bcrypt from '../libs/bcrypt.js'
 
 function getAll(){
-    return Autor.find({}) //regresa la promesa que utilizaré en los routers(presenters)
+    return Autors.find({}) //regresa la promesa que utilizaré en los routers(presenters)
 }
 
 
-function create(newAutor){
-    return Autor.create(newAutor)
+async function create(newAutor){
+    // modificar
+    const { email, password } = newAutor
+
+    const autorFound = await Autors.findOne({email})
+
+    if(autorFound) throw new Error('Ya existe un Autor con ese email')
+
+    // Encriptar el password
+    const encryptedPassword = await bcrypt.hash(password)
+
+    return Autors.create({...newAutor, password: encryptedPassword})
 }
 
 function update(idAutor, unupdatedAutor){
@@ -15,11 +26,11 @@ function update(idAutor, unupdatedAutor){
 }
 
 function getById(idAutor){
-    return Autor.findById(idAutor)
+    return s.findById(idAutor)
 }
 
 function deleteById(idAutor){
-    return Autor.findByIdAndDelete(idAutor)
+    return Autors.findByIdAndDelete(idAutor)
 }
 
 

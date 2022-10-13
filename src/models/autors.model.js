@@ -39,5 +39,5 @@ const autorSchema = new mongoose.Schema({ //recibirá un objeto
     }
 })
 
-const Autor = mongoose.model('autors', autorSchema)
-export {Autor}
+const Autors = mongoose.model('autors', autorSchema)
+export {Autors}

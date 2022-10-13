@@ -2,13 +2,14 @@
 
 import express from "express";
 import * as autorsUsesCases from "../useCases/autors.use.js";
-import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
+import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Solo Fer y diosito sabe
+import { auth } from "../middlewares/auth.js";
 
 
 const router = express.Router();
 
 //Routers o endpoints
-router.get("/", async (request, response, next) => {
+router.get("/", auth, async (request, response, next) => {
   try {
     const allAutors = await autorsUsesCases.getAll();
  
