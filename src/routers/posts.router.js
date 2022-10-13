@@ -49,7 +49,7 @@ router.get("/:idPost", async (request, response, next) => {
     const getPost = await postsUsesCases.getById(idPost);
 
     if (!idPost) {
-      throw new StatusHttp("Post no encontrado");
+      throw new StatusHttp("Post no encontrado", 401);
     }
     response.json({
       succes: true,
@@ -120,6 +120,7 @@ router.patch("/:idPost", async (request, response, next) => {
     }
     response.json({
       succes: true,
+      message: 'post updated',
       data: {
         post: postUpdated,
       },
