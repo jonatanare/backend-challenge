@@ -9,7 +9,7 @@ import { auth } from "../middlewares/auth.js";
 const router = express.Router();
 
 //Routers o endpoints
-router.get("/", auth, async (request, response, next) => {
+router.get("/", async (request, response, next) => {
   try {
     const allPosts = await postsUsesCases.getAll();
  

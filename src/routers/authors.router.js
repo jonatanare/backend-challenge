@@ -3,6 +3,8 @@
 import express from "express";
 import * as authorsUsesCases from "../useCases/authors.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
+import { auth } from "../middlewares/auth.js";
+
 
 
 const router = express.Router();
@@ -11,7 +13,7 @@ const router = express.Router();
 router.get("/", async (request, response, next) => {
   try {
     const allAuthors = await authorsUsesCases.getAll();
- 
+ /* 
     const { name, nacionality } = request.query;
 
     const filters = {};
@@ -23,7 +25,7 @@ router.get("/", async (request, response, next) => {
       filters.nacionality = nacionality;
     }
 
-    console.log(filters); 
+    console.log(filters);  */
 
     response.json({
       succes: true,
@@ -43,7 +45,7 @@ router.get("/:idAuthor", async (request, response, next) => {
       const { idAuthor } = request.params;
       const getAuthor = await authorsUsesCases.getById(idAuthor);
   
-      if (!idAuthor) {
+      if (!getAuthor) {
         throw new StatusHttp("author no encontrado");
       }
       response.json({
@@ -59,7 +61,7 @@ router.get("/:idAuthor", async (request, response, next) => {
   
 
 //POST /Authors
-router.post("/", async (request, response, next) => {
+router.post("/",  async (request, response, next) => {
   try {
     const { body: newAuthor } = request;
 
@@ -76,7 +78,7 @@ router.post("/", async (request, response, next) => {
 });
 
 
-router.delete("/:idAuthor", async (request, response, next) => {
+router.delete("/:idAuthor", auth,  async (request, response, next) => {
   try {
     let { idAuthor } = request.params;
     const authorDeleted = await authorsUsesCases.deleteById(idAuthor);
@@ -96,7 +98,7 @@ router.delete("/:idAuthor", async (request, response, next) => {
   }
 });
 
-router.patch("/:idAuthor", async (request, response) => {
+router.patch("/:idAuthor", auth,  async (request, response) => {
   try {
     const { idAuthor } = request.params;
     const unUpdateAuthor = request.body;

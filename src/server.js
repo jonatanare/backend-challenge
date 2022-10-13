@@ -19,6 +19,6 @@ server.use('/auth', authRouter)
 server.use("/comments", commentRouter)
 
 // middleware - handleErrors
-//server.use(handleErrors);
-
+/* server.use(handleErrors);
+ */
 export { server }; //asi con ste nombre la tengo q importat cuando esta dentro de llaves
