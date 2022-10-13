@@ -1,4 +1,5 @@
 import {Post} from '../models/posts.model.js'
+import  { Author } from '../models/authors.model.js'
 
 
 function getAll(){
@@ -6,8 +7,12 @@ function getAll(){
 }
 
 
-function create(newPost){
-    return Post.create(newPost)
+async function create(newPost, userCurrent){
+    let postCreated = await Post.create({...newPost, author: userCurrent})
+
+    await Author.findByIdAndUpdate(newPost.author, {$push: {posts: postCreated._id}})
+
+    return postCreated
 }
 
 function update(idPost, unupdatedPost){
