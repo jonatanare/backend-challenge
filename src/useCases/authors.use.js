@@ -13,7 +13,7 @@ async function create(newAuthor){
 
     const authorFound = await Author.findOne({email})
 
-    if(authorFound) throw new Error('Ya existe un Author con ese email')
+    if(authorFound) throw new Error('This author already exist!')
 
     // Encriptar el password
     const encryptedPassword = await bcrypt.hash(password)

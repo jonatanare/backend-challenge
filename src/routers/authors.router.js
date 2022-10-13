@@ -13,20 +13,6 @@ const router = express.Router();
 router.get("/", async (request, response, next) => {
   try {
     const allAuthors = await authorsUsesCases.getAll();
- /* 
-    const { name, nacionality } = request.query;
-
-    const filters = {};
-
-    if (name) {
-      filters.name = name;
-    }
-    if (nacionality) {
-      filters.nacionality = nacionality;
-    }
-
-    console.log(filters);  */
-
     response.json({
       succes: true,
       data: {
@@ -45,8 +31,8 @@ router.get("/:idAuthor", async (request, response, next) => {
       const { idAuthor } = request.params;
       const getAuthor = await authorsUsesCases.getById(idAuthor);
   
-      if (!getAuthor) {
-        throw new StatusHttp("author no encontrado");
+      if (!idAuthor) {
+        throw new StatusHttp("author no encontrado", 401);
       }
       response.json({
         succes: true,
@@ -64,15 +50,20 @@ router.get("/:idAuthor", async (request, response, next) => {
 router.post("/",  async (request, response, next) => {
   try {
     const { body: newAuthor } = request;
-
+    console.log(newAuthor.email);
+    if (newAuthor.email) {
+      throw new StatusHttp("This author already exist!");
+    }
     const authorCreated = await authorsUsesCases.create(newAuthor);
+    
     console.log(authorCreated);
     response.json({
       succes: true,
-      msg: "author creado",
+      message: "author created",
       data: authorCreated,
     });
   } catch (error) {
+    console.log(error);
    next(error)
   }
 });
@@ -87,10 +78,10 @@ router.delete("/:idAuthor", auth,  async (request, response, next) => {
       throw new StatusHttp("author no encontrado");
     }
     response.json({
-      succes: true,
+      success: true,
+      message:'author deleted',
       data: {
         author: authorDeleted,
-        message:'Author deleted'
       },
     });
   } catch (error) {
@@ -101,12 +92,9 @@ router.delete("/:idAuthor", auth,  async (request, response, next) => {
 router.patch('/:idAuthor',  async (request, response, next) => {
   try {
     const { idAuthor } = request.params
-    console.log(idAuthor);
     const unUpdateAuthor = request.body
-    console.log('unupdatedauthor: ',unUpdateAuthor);
 
     const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
-    console.log('Actualizada',authorUpdated);
 
     if (!unUpdateAuthor) {
       throw new StatusHttp("author not found");
