@@ -19,7 +19,7 @@ const postSchema = new mongoose.Schema({ //recibirá un objeto
     comments:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] 
 })
 
-const Post = mongoose.model('posts', postSchema)
+const Post = mongoose.model('Post', postSchema)
 export {Post}
 
 
