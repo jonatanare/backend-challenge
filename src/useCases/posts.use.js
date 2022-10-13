@@ -1,7 +1,6 @@
 import {Post} from '../models/posts.model.js'
 import  { Author } from '../models/authors.model.js'
 
-
 function getAll(){
     return Post.find({}).populate({path:'comments', select:['comment']})
     //return Post.find({}).populate('comments')
@@ -28,6 +27,14 @@ function deleteById(idPost){
     return Post.findByIdAndDelete(idPost)
 }
 
+async function getPostbyPage(page, limit) {
+    
+    const tasks = await Post.find()
+    .skip(page*limit)
+    .limit(limit)
+    return tasks
+}
+
 
 
 
@@ -40,4 +47,5 @@ export {
     update,
     deleteById,
     getById,
+    getPostbyPage
 }

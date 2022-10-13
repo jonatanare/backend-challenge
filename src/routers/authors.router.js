@@ -12,7 +12,10 @@ const router = express.Router();
 //Routers o endpoints
 router.get("/", async (request, response, next) => {
   try {
-    const allAuthors = await authorsUsesCases.getAll();
+    const {page, limit} = request.query
+    const skip = (page-1)*10;
+   
+    const allAuthors = await authorsUsesCases.getAll().skip(skip).limit(limit)
     response.json({
       succes: true,
       data: {
@@ -20,6 +23,7 @@ router.get("/", async (request, response, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
@@ -29,6 +33,7 @@ router.get("/", async (request, response, next) => {
 router.get("/:idAuthor", async (request, response, next) => {
     try {
       const { idAuthor } = request.params;
+      
       const getAuthor = await authorsUsesCases.getById(idAuthor);
   
       if (!idAuthor) {

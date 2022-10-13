@@ -3,7 +3,6 @@ import jwt_decode from "jwt-decode";
 import * as commentUseCase from "../useCases/comments.use.js";
 import { auth } from "../middlewares/auth.js";
 import { StatusHttp } from "../libs/statusHttp.js";
-import next from "next";
 const router = express.Router();
 router.get('/', async(request, response, next) => {
   try {

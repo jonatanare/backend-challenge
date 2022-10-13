@@ -5,30 +5,19 @@ import jwt_decode from "jwt-decode";
 import * as postsUsesCases from "../useCases/posts.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
 import { auth } from "../middlewares/auth.js";
+import {Post} from '../models/posts.model.js'
+import mongoose from 'mongoose'
 
 
 const router = express.Router();
 
 //Routers o endpoints
-router.get("/", async (request, response, next) => {
+ router.get("/", async (request, response, next) => {
   try {
-    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']});
-    //const allPosts = await postsUsesCases.getAll().populate('author');
-
-    console.log(allPosts);
-    const { name, nacionality } = request.query;
-
-    const filters = {};
-
-    if (name) {
-      filters.name = name;
-    }
-    if (nacionality) {
-      filters.nacionality = nacionality;
-    }
-
-    console.log(filters);
-
+    const {page, limit} = request.query
+    const skip = (page-1)*10;
+    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).skip(skip).limit(limit);
+    
     response.json({
       succes: true,
       data: {
@@ -39,7 +28,7 @@ router.get("/", async (request, response, next) => {
     console.log(error);
     next(error);
   }
-});
+}); 
 
 //GET /posts /:id
 
@@ -130,4 +119,25 @@ router.patch("/:idPost", async (request, response, next) => {
   }
 });
 
-export default router;
+//PLUS
+/* router.get("/", async (request, response) => {
+  try {
+    const {page, limit} = request.query
+    const skip = (page-1)*10;
+
+    const post = await Post.find().skip(skip).limit(limit)
+console.log(page);
+    
+    
+    response.json({
+      succes: true,
+      data: {
+        posts: post
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}); */
+export default router

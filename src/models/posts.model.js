@@ -49,6 +49,7 @@ const postSchema = new mongoose.Schema({ //recibirá un objeto
     },
 })
 
+
 const Post = mongoose.model('Post', postSchema)
 export {Post}
 
