@@ -1,18 +1,18 @@
-import { Autors } from "../models/autors.model.js";
+import { Author } from "../models/authors.model.js";
 import bcrypt from "../libs/bcrypt.js";
 import jwt from "../libs/jwt.js";
 
 async function login(email, password) {
 
-    const autorFound = await Autors.findOne({email})
+    const authorFound = await Author.findOne({email})
 
-    if(!autorFound) throw new Error('Credenciales invalidad')
+    if(!authorFound) throw new Error('Credenciales invalidad')
 
-    const isValidPassword = await bcrypt.compare(password, autorFound.password)
+    const isValidPassword = await bcrypt.compare(password, authorFound.password)
 
     if(!isValidPassword) throw new Error('Credenciales invalidas')
 
-    return jwt.sign({id: autorFound._id})
+    return jwt.sign({id: authorFound._id})
 }
 
 export {
