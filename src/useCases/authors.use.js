@@ -29,7 +29,7 @@ async function getById(idAuthor){
 }
 
 async function deleteById(idAuthor){
-    const authorFinded = await Author.findById(idAuthor)
+    const authorFinded = await Author.findById(idAuthor).populate('posts')
     if(!authorFinded) throw new StatusHttp('Author not found', 400);
     return Author.findByIdAndDelete(idAuthor)
 }
