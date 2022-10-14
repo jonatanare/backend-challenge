@@ -29,7 +29,8 @@ const postSchema = new mongoose.Schema({
     },
     hashtags:{
         type:String,
-        required:false, 
+        required:false,
+        default: "#javascript,#nodejs,#expressjs",
         minLength: 3,
         maxLength: 500,
         trim: true
