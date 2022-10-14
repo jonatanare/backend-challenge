@@ -22,6 +22,23 @@ router.get("/", async (request, response, next) => {
     next(error);
   }
 }); 
+router.get("/comments", async (request, response, next) => {
+  try {
+    const {page, limit} = request.query
+    const skip = (page-1)*10;
+    const allPosts = await postsUsesCases.getAll().populate({path:'comments', select:['comment']}).skip(skip).limit(limit);
+    response.json({
+      succes: true,
+      message: "All posts",
+      data: {
+        posts: allPosts
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}); 
 
 
 //GET /posts /:id

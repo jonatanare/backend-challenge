@@ -14,7 +14,7 @@ async function create(newAuthor){
     if(authorFound) throw new StatusHttp('This author already exist!', 400)
     // Encriptar el password
     const encryptedPassword = await bcrypt.hash(password)
-    return Author.create({...newAuthor, password: encryptedPassword})
+    return (await Author.create({...newAuthor, password: encryptedPassword}))
 }
 async function update(idAuthor, unupdatedAuthor){
     const authorFinded = await Author.findById(idAuthor)

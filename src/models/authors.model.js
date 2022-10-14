@@ -38,6 +38,7 @@ const authorSchema = new mongoose.Schema({
         max: 100
     },
     posts:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] ,
+    
 
 })
 

@@ -10,8 +10,8 @@ const server = express();
 server.use(express.json());
 server.use(cors())
 
-//aqui encuentro a la ruta /authors
-server.use("/authors", authorsRouter); //diciendole al server que conozca este router , ánclate a la ruta kdkoders
+//routes
+server.use("/authors", authorsRouter); 
 server.use("/posts", postsRouter);
 server.use('/auth', authRouter)
 server.use("/comments", commentRouter)
@@ -19,4 +19,4 @@ server.use("/comments", commentRouter)
 // middleware - handleErrors
 server.use(handleErrors);
  
-export { server }; //asi con ste nombre la tengo q importat cuando esta dentro de llaves
+export { server }; 
