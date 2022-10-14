@@ -33,7 +33,8 @@ async function deleteById(idAuthor){
     if(!authorFinded) throw new StatusHttp('Author not found', 400);
     return Author.findByIdAndDelete(idAuthor)
 }
-//export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar
+
+
 export {
     getAll,
     create,

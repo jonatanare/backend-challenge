@@ -1,5 +1,3 @@
-//endpoints
-
 import express from "express";
 import * as authorsUsesCases from "../useCases/authors.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
@@ -7,7 +5,6 @@ import { auth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-//Routers o endpoints 
 
 //GET /Authors 
 router.get("/", async (request, response, next) => {
@@ -22,6 +19,7 @@ router.get("/", async (request, response, next) => {
       .limit(limit);
     response.json({
       succes: true,
+      message:'All authors',
       data: {
         authors: allAuthors,
       },
@@ -43,10 +41,9 @@ router.get("/", async (request, response, next) => {
         throw new StatusHttp("author no encontrado", 401);
       }
 
-      //const getAuthor = await authorsUsesCases.getById(idAuthor);
-
       response.json({
         succes: true,
+        message:'Author',
         data: {
           author: getAuthor,
         },
@@ -67,7 +64,7 @@ router.post("/", async (request, response, next) => {
     console.log(authorCreated);
     response.json({
       succes: true,
-      message: "author created",
+      message: "Author created",
       data: authorCreated,
     });
   } catch (error) {
@@ -83,7 +80,7 @@ router.delete("/:idAuthor", auth, async (request, response, next) => {
     console.log(authorDeleted);
     response.json({
       success: true,
-      message: "author deleted",
+      message: "Author deleted",
       data: {
         author: authorDeleted,
       },
@@ -93,6 +90,8 @@ router.delete("/:idAuthor", auth, async (request, response, next) => {
   }
 });
 
+
+//EDIT /AUthors
 router.patch("/:idAuthor", async (request, response, next) => {
   try {
     const { idAuthor } = request.params
@@ -102,6 +101,7 @@ router.patch("/:idAuthor", async (request, response, next) => {
     const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
     response.json({
       succes: true,
+      message:'Author updated',
       data: {
         author: authorUpdated,
       },

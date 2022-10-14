@@ -2,8 +2,6 @@ import dbConnect from './src/libs/db.js'
 import {server} from './src/server.js'
 
 
-
-//Poner a escuchar nuestro server 
 dbConnect()
     .then(() => {
         console.log('Database connected c:');

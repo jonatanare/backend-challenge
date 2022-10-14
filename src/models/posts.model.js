@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const postSchema = new mongoose.Schema({ //recibirá un objeto
+const postSchema = new mongoose.Schema({ 
     image: {
         type: String,
         default: "http://placeimg.com/806/338/tech",
