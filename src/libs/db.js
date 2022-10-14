@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-/* import * as dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config()
 
@@ -11,11 +11,12 @@ const {
     DB_HOST,
     DB_NAME
 } = process.env
- */
-const URL = 'mongodb+srv://movebike:movebike2022@movebike-backend.vb4jydi.mongodb.net/devto?retryWrites=true&w=majority' //uri que nos da mongo para podernos conectar 
+ 
+const URL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority` 
 
 function connect(){
-    return mongoose.connect(URL) //nos regresa una promesa 
+    return mongoose.connect(URL)
 }
 
 export default connect 
+

@@ -3,12 +3,15 @@ import jwt_decode from "jwt-decode";
 import * as commentUseCase from "../useCases/comments.use.js";
 import { auth } from "../middlewares/auth.js";
 const router = express.Router();
+
+//GET /comments
 router.get('/', async(request, response, next) => {
   try {
     const allComments = await commentUseCase.getAll()
 
     response.json({
       success: true,
+      message: "All comments",
       data: {
         comments: allComments
       }
@@ -18,6 +21,9 @@ router.get('/', async(request, response, next) => {
     next(error)
   }
 })
+
+
+//POST /comments
 router.post("/", auth, async (request, response, next) => {
   try {
     const { body: comment } = request;
@@ -29,7 +35,7 @@ router.post("/", auth, async (request, response, next) => {
     console.log(newComment);
     response.json({
       succes: true,
-      msg: "comment published",
+      message: "Comment published",
       data: newComment,
     });
   } catch (error) {
@@ -38,13 +44,15 @@ router.post("/", auth, async (request, response, next) => {
   }
 });
 
+
+//DELETE /comments
 router.delete("/:idComment", auth, async (request, response, next) => {
   try {
     const { idComment } = request.params;
     const commentDeleted = await commentUseCase.deleteById(idComment);
     response.json({
       succes: true,
-      msg: "Comment deleted",
+      message: "Comment deleted",
       data: commentDeleted,
     });
   } catch (error) {
@@ -53,6 +61,8 @@ router.delete("/:idComment", auth, async (request, response, next) => {
   }
 });
 
+
+//EDIT /comments
 router.patch('/:idComment', auth, async (request, response, next) => {
   try {
     const { idComment } = request.params

@@ -1,4 +1,4 @@
-function handleErrors (error, request, response, next){ //en este caso next ya no es necesario ya que se ejecuta después del endpoint 
+function handleErrors (error, request, response, next){ 
     response.status(error.status || 500).json({
         succes: false,
         message: error.message
