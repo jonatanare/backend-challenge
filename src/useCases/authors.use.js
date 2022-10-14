@@ -1,43 +1,39 @@
 //acciones que el usuario podrá realizar 
 import {Author} from '../models/authors.model.js'
 import bcrypt from '../libs/bcrypt.js'
+import { StatusHttp } from '../libs/statusHttp.js'
 
 function getAll(){
     return Author.find({}) //regresa la promesa que utilizaré en los routers(presenters)
 }
 
-
 async function create(newAuthor){
     // modificar
     const { email, password } = newAuthor
-
     const authorFound = await Author.findOne({email})
-
-    if(authorFound) throw new Error('This author already exist!')
-
+    if(authorFound) throw new StatusHttp('This author already exist!', 400)
     // Encriptar el password
     const encryptedPassword = await bcrypt.hash(password)
-
     return Author.create({...newAuthor, password: encryptedPassword})
 }
-
-function update(idAuthor, unupdatedAuthor){
+async function update(idAuthor, unupdatedAuthor){
+    const authorFinded = await Author.findById(idAuthor)
+    if(!authorFinded) throw new StatusHttp('Author not found', 400)
     return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor, {new:true})
 }
 
-function getById(idAuthor){
-    return Author.findById(idAuthor).populate('posts')
+async function getById(idAuthor){
+    const authorFinded = await Author.findById(idAuthor)
+    if(!authorFinded) throw  new StatusHttp('Author not found', 400)
+    return Author.findById(authorFinded)
 }
 
-
-function deleteById(idAuthor){
+async function deleteById(idAuthor){
+    const authorFinded = await Author.findById(idAuthor).populate('posts')
+    if(!authorFinded) throw new StatusHttp('Author not found', 400);
     return Author.findByIdAndDelete(idAuthor)
 }
-
-
-//export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar 
-
-
+//export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar
 export {
     getAll,
     create,

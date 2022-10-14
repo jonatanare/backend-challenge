@@ -32,37 +32,36 @@ router.get("/", async (request, response, next) => {
   }
 });
 
-//GET /Authors /:id
-router.get("/:idAuthor", async (request, response, next) => {
-  try {
-    const { idAuthor } = request.params;
+  //PLUS endpoint 
+  router.get("/:idAuthor", async (request, response, next) => {
+    try {
+      const { idAuthor } = request.params;
 
-    const getAuthor = await authorsUsesCases
-      .getById(idAuthor)
+      const getAuthor = await authorsUsesCases.getById(idAuthor)
+  
+      if (!idAuthor) {
+        throw new StatusHttp("author no encontrado", 401);
+      }
 
-    if (!idAuthor) {
-      throw new StatusHttp("author not found", 401);
+      //const getAuthor = await authorsUsesCases.getById(idAuthor);
+
+      response.json({
+        succes: true,
+        data: {
+          author: getAuthor,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      next(error)
     }
-    response.json({
-      succes: true,
-      data: {
-        author: getAuthor,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-});
+  })
+
 
 //POST /Authors
 router.post("/", async (request, response, next) => {
   try {
     const { body: newAuthor } = request;
-    console.log(newAuthor.email);
-    if (newAuthor.email) {
-      throw new StatusHttp("This author already exist!");
-    }
     const authorCreated = await authorsUsesCases.create(newAuthor);
 
     console.log(authorCreated);
@@ -82,9 +81,6 @@ router.delete("/:idAuthor", auth, async (request, response, next) => {
     const { idAuthor } = request.params;
     const authorDeleted = await authorsUsesCases.deleteById(idAuthor);
     console.log(authorDeleted);
-    if (!authorDeleted) {
-      throw new StatusHttp("author no encontrado");
-    }
     response.json({
       success: true,
       message: "author deleted",
@@ -99,17 +95,11 @@ router.delete("/:idAuthor", auth, async (request, response, next) => {
 
 router.patch("/:idAuthor", async (request, response, next) => {
   try {
-    const { idAuthor } = request.params;
-    const unUpdateAuthor = request.body;
+    const { idAuthor } = request.params
+    const unUpdateAuthor = request.body
+    console.log(unUpdateAuthor);
 
-    const authorUpdated = await authorsUsesCases.update(
-      idAuthor,
-      unUpdateAuthor
-    );
-
-    if (!unUpdateAuthor) {
-      throw new StatusHttp("author not found");
-    }
+    const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
     response.json({
       succes: true,
       data: {
@@ -121,4 +111,4 @@ router.patch("/:idAuthor", async (request, response, next) => {
   }
 });
 
-export default router;
+export default router
