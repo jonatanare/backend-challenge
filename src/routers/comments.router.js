@@ -30,7 +30,7 @@ router.post("/", auth, async (request, response, next) => {
     console.log(newComment);
     response.json({
       succes: true,
-      msg: "Tu comentario ha sido publicado",
+      msg: "comment published",
       data: newComment,
     });
   } catch (error) {

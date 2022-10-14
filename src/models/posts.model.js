@@ -11,14 +11,14 @@ const postSchema = new mongoose.Schema({ //recibirá un objeto
     },
     createdAt: {
         type: Date,
-        default: Date.now,
+        default: Date.now(),
         required: false
     },
 
     updatedAt: {
         type: Date,
-        default: Date.now,
-        required: false
+        default: Date.now()
+           
     },
     title: {
         type: String, 
@@ -54,11 +54,3 @@ const Post = mongoose.model('Post', postSchema)
 export {Post}
 
 
-
-/* const commentSchema = new mongoose.Schema({
-    text: String,
-    username: String
-})
-
-const Comment = mongoose.model('comment', commentSchema)
-export {Comment} */

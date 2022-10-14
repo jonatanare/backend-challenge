@@ -6,7 +6,7 @@ const authorSchema = new mongoose.Schema({ //recibirá un objeto
         required: true,
         minLength: 3,
         maxLength: 100,
-        trim: true //si este nombre viene con espacios al principio y al final que los borre
+        trim: true 
     },
     biography: {
         type: String, 
@@ -37,10 +37,8 @@ const authorSchema = new mongoose.Schema({ //recibirá un objeto
         min: 1,
         max: 100
     },
-    posts: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Post'
-    }]
+    posts:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] ,
+
 })
 
 const Author = mongoose.model('Author', authorSchema)

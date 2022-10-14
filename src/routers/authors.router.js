@@ -15,7 +15,7 @@ router.get("/", async (request, response, next) => {
     const {page, limit} = request.query
     const skip = (page-1)*10;
    
-    const allAuthors = await authorsUsesCases.getAll().skip(skip).limit(limit)
+    const allAuthors = await authorsUsesCases.getAll().populate({path:'posts', select:['title']}).skip(skip).limit(limit)
     response.json({
       succes: true,
       data: {
@@ -30,11 +30,14 @@ router.get("/", async (request, response, next) => {
 
 //GET /Authors /:id
 
-router.get("/:idAuthor", async (request, response, next) => {
+
+
+  //PLUS endpoint 
+  router.get("/:idAuthor", async (request, response, next) => {
     try {
       const { idAuthor } = request.params;
       
-      const getAuthor = await authorsUsesCases.getById(idAuthor);
+      const getAuthor = await authorsUsesCases.getById(idAuthor).populate({path:'posts', select:['title']});
   
       if (!idAuthor) {
         throw new StatusHttp("author no encontrado", 401);
@@ -46,9 +49,12 @@ router.get("/:idAuthor", async (request, response, next) => {
         },
       });
     } catch (error) {
+      console.log(error);
       next(error)
     }
   });
+
+ 
   
 
 //POST /Authors

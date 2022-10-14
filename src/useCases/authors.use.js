@@ -26,8 +26,9 @@ function update(idAuthor, unupdatedAuthor){
 }
 
 function getById(idAuthor){
-    return Author.findById(idAuthor)
+    return Author.findById(idAuthor).populate('posts')
 }
+
 
 function deleteById(idAuthor){
     return Author.findByIdAndDelete(idAuthor)

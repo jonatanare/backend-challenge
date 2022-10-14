@@ -5,8 +5,6 @@ import jwt_decode from "jwt-decode";
 import * as postsUsesCases from "../useCases/posts.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
 import { auth } from "../middlewares/auth.js";
-import {Post} from '../models/posts.model.js'
-import mongoose from 'mongoose'
 
 
 const router = express.Router();
@@ -16,8 +14,7 @@ const router = express.Router();
   try {
     const {page, limit} = request.query
     const skip = (page-1)*10;
-    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).skip(skip).limit(limit);
-    
+    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).populate({path:'comments', select:['comment']}).skip(skip).limit(limit);
     response.json({
       succes: true,
       data: {
@@ -51,22 +48,42 @@ router.get("/:idPost", async (request, response, next) => {
   }
 });
 
+
+router.get("/:idPost", async (request, response, next) => {
+  try {
+    const { idPost } = request.params;
+    const getPost = await postsUsesCases.getById(idPost);
+
+    if (!idPost) {
+      throw new StatusHttp("Post no encontrado", 401);
+    }
+    response.json({
+      succes: true,
+      data: {
+        post: getPost,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 //POST /Posts
 router.post("/", auth, async (request, response, next) => {
   try {
     const token = request.headers.authorization;
-    const newPost = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
+    const post = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
     const { id } = jwt_decode(token);
     console.log('ID: ',id);
-    console.log('Body Post: ',newPost);
-    const postCreated = await postsUsesCases.create(newPost, id);
+    console.log('Body Post: ',post);
+    const postCreated = await postsUsesCases.create(post, id)
     console.log(postCreated);
     //         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
      
       
     response.json({
       success: true,
-      message: "post creado",
+      message: "new post created",
       data: {
         posts: postCreated,
       },
