@@ -1,5 +1,6 @@
 import {Post} from '../models/posts.model.js'
 import  { Author } from '../models/authors.model.js'
+import { StatusHttp } from '../libs/statusHttp.js'
 
 
 function getAll(){
@@ -17,6 +18,17 @@ async function create(newPost, userCurrent){
 }
 
 function update(idPost, unupdatedPost){
+    const { title } = unupdatedPost
+
+    console.log('TITLE: ',title);
+    console.log('ID: ', idPost);
+
+    const postFinded = Post.findById(idPost)
+
+    console.log('POST ENCONTRADO: ', postFinded);
+
+    if(!postFinded) throw StatusHttp('Post not found!')
+
     return Post.findByIdAndUpdate(idPost, unupdatedPost, {new:true})
 }
 
