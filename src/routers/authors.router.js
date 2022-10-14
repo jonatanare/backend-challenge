@@ -36,12 +36,15 @@ router.get("/", async (request, response, next) => {
   router.get("/:idAuthor", async (request, response, next) => {
     try {
       const { idAuthor } = request.params;
-      
+
       const getAuthor = await authorsUsesCases.getById(idAuthor).populate({path:'posts', select:['title']});
   
       if (!idAuthor) {
         throw new StatusHttp("author no encontrado", 401);
       }
+
+      const getAuthor = await authorsUsesCases.getById(idAuthor);
+
       response.json({
         succes: true,
         data: {
@@ -61,10 +64,6 @@ router.get("/", async (request, response, next) => {
 router.post("/",  async (request, response, next) => {
   try {
     const { body: newAuthor } = request;
-    console.log(newAuthor.email);
-    if (newAuthor.email) {
-      throw new StatusHttp("This author already exist!");
-    }
     const authorCreated = await authorsUsesCases.create(newAuthor);
     
     console.log(authorCreated);
@@ -74,7 +73,6 @@ router.post("/",  async (request, response, next) => {
       data: authorCreated,
     });
   } catch (error) {
-    console.log(error);
    next(error)
   }
 });
@@ -104,12 +102,9 @@ router.patch('/:idAuthor',  async (request, response, next) => {
   try {
     const { idAuthor } = request.params
     const unUpdateAuthor = request.body
+    console.log(unUpdateAuthor);
 
     const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
-
-    if (!unUpdateAuthor) {
-      throw new StatusHttp("author not found");
-    }
     response.json({
       succes: true,
       data: {
