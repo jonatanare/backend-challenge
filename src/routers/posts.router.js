@@ -4,14 +4,15 @@ import * as postsUsesCases from "../useCases/posts.use.js";
 import { auth } from "../middlewares/auth.js";
 const router = express.Router();
 
-//Routers o endpoints
- router.get("/", async (request, response, next) => {
+//GET /posts
+router.get("/", async (request, response, next) => {
   try {
     const {page, limit} = request.query
     const skip = (page-1)*10;
     const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).populate({path:'comments', select:['comment']}).skip(skip).limit(limit);
     response.json({
       succes: true,
+      message: "All posts",
       data: {
         posts: allPosts
       },
@@ -22,14 +23,15 @@ const router = express.Router();
   }
 }); 
 
+
 //GET /posts /:id
-
 router.get("/:idPost", async (request, response, next) => {
   try {
     const { idPost } = request.params;
     const getPost = await postsUsesCases.getById(idPost);
     response.json({
       succes: true,
+      message: "Post found",
       data: {
         post: getPost,
       },
@@ -40,22 +42,8 @@ router.get("/:idPost", async (request, response, next) => {
 });
 
 
-router.get("/:idPost", async (request, response, next) => {
-  try {
-    const { idPost } = request.params;
-    const getPost = await postsUsesCases.getById(idPost);
-    response.json({
-      succes: true,
-      data: {
-        post: getPost,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
-//POST /Posts
+//CREATE /Posts
 router.post("/", auth, async (request, response, next) => {
   try {
     const token = request.headers.authorization;
@@ -64,7 +52,7 @@ router.post("/", auth, async (request, response, next) => {
     const postCreated = await postsUsesCases.create(post, id)
     response.json({
       success: true,
-      message: "new post created",
+      message: "New post created",
       data: {
         posts: postCreated,
       },
@@ -74,6 +62,8 @@ router.post("/", auth, async (request, response, next) => {
   }
 });
 
+
+//DELETE /posts
 router.delete("/:idPost", auth, async (request, response, next) => {
   try {
     let { idPost } = request.params;
@@ -83,7 +73,7 @@ router.delete("/:idPost", auth, async (request, response, next) => {
       succes: true,
       data: {
         post: postDeleted,
-        message: "Este post ha sido eliminado",
+        message: "Post deleted",
       },
     });
   } catch (error) {
@@ -91,6 +81,8 @@ router.delete("/:idPost", auth, async (request, response, next) => {
   }
 });
 
+
+//EDIT /posts
 router.patch("/:idPost", auth, async (request, response, next) => {
   try {
     const { idPost } = request.params;
@@ -98,7 +90,7 @@ router.patch("/:idPost", auth, async (request, response, next) => {
     const postUpdated = await postsUsesCases.update(idPost, unUpdatePost)
     response.json({
       succes: true,
-      message: 'post updated',
+      message: 'Post updated',
       data: {
         post: postUpdated,
       },
@@ -108,25 +100,4 @@ router.patch("/:idPost", auth, async (request, response, next) => {
   }
 });
 
-//PLUS
-/* router.get("/", async (request, response) => {
-  try {
-    const {page, limit} = request.query
-    const skip = (page-1)*10;
-
-    const post = await Post.find().skip(skip).limit(limit)
-console.log(page);
-    
-    
-    response.json({
-      succes: true,
-      data: {
-        posts: post
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-}); */
 export default router
