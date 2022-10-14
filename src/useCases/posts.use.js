@@ -5,7 +5,7 @@ import { StatusHttp } from '../libs/statusHttp.js'
 
 
 function getAll(){
-    return Post.find({}).populate({path:'comments', select:['comment']})
+    return Post.find({})
  }
 
  

@@ -9,7 +9,24 @@ router.get("/", async (request, response, next) => {
   try {
     const {page, limit} = request.query
     const skip = (page-1)*10;
-    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).populate({path:'comments', select:['comment']}).skip(skip).limit(limit);
+    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).skip(skip).limit(limit);
+    response.json({
+      succes: true,
+      message: "All posts",
+      data: {
+        posts: allPosts
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}); 
+
+//get post with comments
+router.get("/comments", async (request, response, next) => {
+  try {
+    const allPosts = await postsUsesCases.getAll().populate({path:'comments', select:['comment']})
     response.json({
       succes: true,
       message: "All posts",
