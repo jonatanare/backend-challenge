@@ -12,7 +12,7 @@ function auth(request, response, next) {
         response.status(401)
         response.json({
             success: false,
-            message: 'No autorixado :(',
+            message: 'Log in or create your count',
             error: error.message
         })
     }

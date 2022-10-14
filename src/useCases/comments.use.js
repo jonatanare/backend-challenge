@@ -9,9 +9,7 @@ async function getAll() {
 async function addComment(newComment, userCurrent) {
   console.log({ ...newComment, author: userCurrent });
 
-  let commentCreated = await Comment.create({
-    ...newComment,
-    author: userCurrent,
+  let commentCreated = await Comment.create({...newComment,author: userCurrent,
   });
 
   await Post.findByIdAndUpdate(newComment.post_id, {

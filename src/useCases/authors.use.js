@@ -28,6 +28,12 @@ async function update(idAuthor, unupdatedAuthor){
     return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor, {new:true})
 }
 
+function getById(idAuthor){
+    return Author.findById(idAuthor).populate('posts')
+}
+
+
+
 async function getById(idAuthor){
     const authorFinded = await Author.findById(idAuthor)
     if(!authorFinded) throw  new StatusHttp('Author not found', 400)
@@ -37,6 +43,7 @@ async function getById(idAuthor){
 async function deleteById(idAuthor){
     const authorFinded = await Author.findById(idAuthor)
     if(!authorFinded) throw new StatusHttp('Author not found', 404);
+
     return Author.findByIdAndDelete(idAuthor)
 }
 

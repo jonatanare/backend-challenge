@@ -9,11 +9,15 @@ function getAll(){
 
 
 async function create(newPost, userCurrent){
-    let postCreated = await Post.create({...newPost, author: userCurrent})
+    console.log({ ...newPost, author: userCurrent });
+    let postCreated = await Post.create({...newPost, author: userCurrent,
+    })
+console.log(newPost,userCurrent);
+    await Author.findByIdAndUpdate(userCurrent,
+        {$push: {posts: postCreated._id},
+    })
 
-    await Author.findByIdAndUpdate(newPost.author, {$push: {posts: postCreated._id}})
-
-    return postCreated
+    return postCreated;
 }
 
 function update(idPost, unupdatedPost){
@@ -39,18 +43,6 @@ function deleteById(idPost){
     return Post.findByIdAndDelete(idPost)
 }
 
-async function getPostbyPage(page, limit) {
-    
-    const tasks = await Post.find()
-    .skip(page*limit)
-    .limit(limit)
-    return tasks
-}
-
-
-
-
-//export default le puedo cambair de nombre y con export asi como la exporto asi la tengo que llamar 
 
 
 export {
@@ -59,5 +51,4 @@ export {
     update,
     deleteById,
     getById,
-    getPostbyPage
 }
