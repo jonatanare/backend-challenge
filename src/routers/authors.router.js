@@ -5,17 +5,21 @@ import * as authorsUsesCases from "../useCases/authors.use.js";
 import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA?
 import { auth } from "../middlewares/auth.js";
 
-
-
 const router = express.Router();
 
-//Routers o endpoints
+//Routers o endpoints 
+
+//GET /Authors 
 router.get("/", async (request, response, next) => {
   try {
-    const {page, limit} = request.query
-    const skip = (page-1)*10;
-   
-    const allAuthors = await authorsUsesCases.getAll().populate({path:'posts', select:['title']}).skip(skip).limit(limit)
+    const { page, limit } = request.query;
+    const skip = (page - 1) * 10;
+
+    const allAuthors = await authorsUsesCases
+      .getAll()
+      .populate({ path: "posts", select: ["title"] })
+      .skip(skip)
+      .limit(limit);
     response.json({
       succes: true,
       data: {
@@ -29,36 +33,30 @@ router.get("/", async (request, response, next) => {
 });
 
 //GET /Authors /:id
+router.get("/:idAuthor", async (request, response, next) => {
+  try {
+    const { idAuthor } = request.params;
 
+    const getAuthor = await authorsUsesCases
+      .getById(idAuthor)
 
-
-  //PLUS endpoint 
-  router.get("/:idAuthor", async (request, response, next) => {
-    try {
-      const { idAuthor } = request.params;
-      
-      const getAuthor = await authorsUsesCases.getById(idAuthor).populate({path:'posts', select:['title']});
-  
-      if (!idAuthor) {
-        throw new StatusHttp("author no encontrado", 401);
-      }
-      response.json({
-        succes: true,
-        data: {
-          author: getAuthor,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      next(error)
+    if (!idAuthor) {
+      throw new StatusHttp("author not found", 401);
     }
-  });
-
- 
-  
+    response.json({
+      succes: true,
+      data: {
+        author: getAuthor,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 
 //POST /Authors
-router.post("/",  async (request, response, next) => {
+router.post("/", async (request, response, next) => {
   try {
     const { body: newAuthor } = request;
     console.log(newAuthor.email);
@@ -66,7 +64,7 @@ router.post("/",  async (request, response, next) => {
       throw new StatusHttp("This author already exist!");
     }
     const authorCreated = await authorsUsesCases.create(newAuthor);
-    
+
     console.log(authorCreated);
     response.json({
       succes: true,
@@ -75,12 +73,11 @@ router.post("/",  async (request, response, next) => {
     });
   } catch (error) {
     console.log(error);
-   next(error)
+    next(error);
   }
 });
 
-
-router.delete("/:idAuthor", auth,  async (request, response, next) => {
+router.delete("/:idAuthor", auth, async (request, response, next) => {
   try {
     const { idAuthor } = request.params;
     const authorDeleted = await authorsUsesCases.deleteById(idAuthor);
@@ -90,22 +87,25 @@ router.delete("/:idAuthor", auth,  async (request, response, next) => {
     }
     response.json({
       success: true,
-      message:'author deleted',
+      message: "author deleted",
       data: {
         author: authorDeleted,
       },
     });
   } catch (error) {
-   next(error)
+    next(error);
   }
 });
 
-router.patch('/:idAuthor',  async (request, response, next) => {
+router.patch("/:idAuthor", async (request, response, next) => {
   try {
-    const { idAuthor } = request.params
-    const unUpdateAuthor = request.body
+    const { idAuthor } = request.params;
+    const unUpdateAuthor = request.body;
 
-    const authorUpdated = await authorsUsesCases.update(idAuthor, unUpdateAuthor)
+    const authorUpdated = await authorsUsesCases.update(
+      idAuthor,
+      unUpdateAuthor
+    );
 
     if (!unUpdateAuthor) {
       throw new StatusHttp("author not found");
@@ -117,7 +117,7 @@ router.patch('/:idAuthor',  async (request, response, next) => {
       },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 
