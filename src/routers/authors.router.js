@@ -43,7 +43,6 @@ router.get("/", async (request, response, next) => {
         throw new StatusHttp("author no encontrado", 401);
       }
 
-      const getAuthor = await authorsUsesCases.getById(idAuthor);
 
       response.json({
         succes: true,
