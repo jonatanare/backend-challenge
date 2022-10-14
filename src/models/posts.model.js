@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const postSchema = new mongoose.Schema({ //recibirá un objeto
     image: {
         type: String,
-        default: "https://via.placeholder.com/150",
+        default: "http://placeimg.com/806/338/tech",
         required: false
     },
     author: {
