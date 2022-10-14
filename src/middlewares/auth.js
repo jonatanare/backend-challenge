@@ -1,11 +1,12 @@
 import jwt from '../libs/jwt.js'
+import { StatusHttp } from '../libs/statusHttp.js'
 
 function auth(request, response, next) {
     try {
         const {authorization: token } = request.headers
 
         const isValidToken = jwt.verify(token)
-        if(!isValidToken) throw new Error('No autorizado')
+        if(!isValidToken) throw new StatusHttp('No autorizado')
 
         next()
     } catch (error) {

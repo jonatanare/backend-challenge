@@ -2,7 +2,6 @@ import express from "express";
 import jwt_decode from "jwt-decode";
 import * as commentUseCase from "../useCases/comments.use.js";
 import { auth } from "../middlewares/auth.js";
-import { StatusHttp } from "../libs/statusHttp.js";
 const router = express.Router();
 router.get('/', async(request, response, next) => {
   try {
@@ -43,11 +42,6 @@ router.delete("/:idComment", auth, async (request, response, next) => {
   try {
     const { idComment } = request.params;
     const commentDeleted = await commentUseCase.deleteById(idComment);
-    console.log(commentDeleted);
-    if (!idComment) {
-      throw new StatusHttp("comment not found");
-    }
-
     response.json({
       succes: true,
       msg: "Comment deleted",
@@ -64,8 +58,6 @@ router.patch('/:idComment', auth, async (request, response, next) => {
     const { idComment } = request.params
     const unupdateComment = request.body
     const commentUpdated = await commentUseCase.update(idComment, unupdateComment)
-
-    if(!idComment) throw new StatusHttp('comment not found')
 
     response.json({
       success: true,

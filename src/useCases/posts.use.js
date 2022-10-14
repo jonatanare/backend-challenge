@@ -4,7 +4,6 @@ import { StatusHttp } from '../libs/statusHttp.js'
 
 function getAll(){
     return Post.find({}).populate({path:'comments', select:['comment']})
-    //return Post.find({}).populate('comments')
  }
 
 
@@ -20,26 +19,22 @@ console.log(newPost,userCurrent);
     return postCreated;
 }
 
-function update(idPost, unupdatedPost){
-    const { title } = unupdatedPost
-
-    console.log('TITLE: ',title);
-    console.log('ID: ', idPost);
-
-    const postFinded = Post.findById(idPost)
-
-    console.log('POST ENCONTRADO: ', postFinded);
-
-    if(!postFinded) throw StatusHttp('Post not found!')
+async function update(idPost, unupdatedPost){
+    const postFinded = await Post.findById(idPost)
+    if(!postFinded) throw new StatusHttp('Post not found!')
 
     return Post.findByIdAndUpdate(idPost, unupdatedPost, {new:true})
 }
 
-function getById(idPost){
+async function getById(idPost){
+    const postFinded = await Post.findById(idPost)
+    if(!postFinded) throw new StatusHttp('Post not found', 400)
     return Post.findById(idPost)
 }
 
-function deleteById(idPost){
+async function deleteById(idPost){
+    const postFinded = await Post.findById(idPost)
+    if(!postFinded) throw new StatusHttp('Post not found')
     return Post.findByIdAndDelete(idPost)
 }
 
