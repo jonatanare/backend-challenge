@@ -9,7 +9,8 @@ router.get("/", async (request, response, next) => {
   try {
     const {page, limit} = request.query
     const skip = (page-1)*10;
-    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).skip(skip).limit(limit);
+    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).skip(skip).limit(limit)
+
     response.json({
       succes: true,
       message: "All posts",
@@ -64,7 +65,7 @@ router.get("/:idPost", async (request, response, next) => {
 router.post("/", auth, async (request, response, next) => {
   try {
     const token = request.headers.authorization;
-    const post = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
+    const post = request.body; 
     const { id } = jwt_decode(token);
     const postCreated = await postsUsesCases.create(post, id)
     response.json({

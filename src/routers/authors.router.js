@@ -59,11 +59,6 @@ router.get("/posts", async (request, response, next) => {
 
       const getAuthor = await authorsUsesCases
       .getById(idAuthor)
-      
-  
-      if (!idAuthor) {
-        throw new StatusHttp("author no encontrado", 401);
-      }
 
       response.json({
         succes: true,
@@ -96,6 +91,7 @@ router.post("/", async (request, response, next) => {
     next(error);
   }
 });
+
 
 router.delete("/:idAuthor", auth, async (request, response, next) => {
   try {
