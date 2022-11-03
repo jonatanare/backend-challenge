@@ -30,12 +30,12 @@ router.get('/', async (request, response, next) => {
 })
 
 // PLUS endpoint
-router.get('/', async (request, response, next) => {
+router.get('/:id', async (request, response, next) => {
   try {
-    const { idAuthor } = request.params
+    const { id} = request.params
 
     const getAuthor = await authorsUsesCases
-      .getById(idAuthor)
+      .getById(id)
 
     response.json({
       succes: true,
