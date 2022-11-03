@@ -1,15 +1,12 @@
 import dbConnect from './src/libs/db.js'
-import {server} from './src/server.js'
-
+import { server } from './src/server.js'
 
 dbConnect()
-    .then(() => {
-        console.log('Database connected c:');
+  .then(() => {
+    console.log('Database connected c:')
 
-        server.listen(8080, () => {
-            console.log('Server listening on port 8080');
-        })
-
-
+    server.listen(8080, () => {
+      console.log('Server listening on port 8080')
     })
-    .catch((error) => console.log('Error: ', error))
+  })
+  .catch((error) => console.log('Error: ', error))
