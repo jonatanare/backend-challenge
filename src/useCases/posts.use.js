@@ -17,21 +17,22 @@ async function create (newPost, userCurrent) {
   return postCreated
 }
 
-async function update (idPost, unupdatedPost) {
-  const postFinded = await Post.findById(idPost)
-  if (!postFinded) throw new StatusHttp('Post not foundUSECASE!')
-  return Post.findByIdAndUpdate(idPost, unupdatedPost, { new: true })
+async function update (idPost, unupdatedPost, updatedAt= Date.now()) {
+  const postFound = await Post.findById(idPost)
+  if (!postFound) throw new StatusHttp('Post not found!')
+  const postUpdated =  Post.findByIdAndUpdate(idPost, {...unupdatedPost, updatedAt: updatedAt})
+  return postUpdated
 }
 
 async function getById (idPost) {
-  const postFinded = await Post.findById(idPost)
-  if (!postFinded) throw new StatusHttp('Post not found', 400)
+  const postFound = await Post.findById(idPost)
+  if (!postFound) throw new StatusHttp('Post not found', 400)
   return Post.findById(idPost)
 }
 
 async function deleteById (idPost) {
-  const postFinded = await Post.findById(idPost)
-  if (!postFinded) throw new StatusHttp('Post not found')
+  const postFound = await Post.findById(idPost)
+  if (!postFound) throw new StatusHttp('Post not found')
   return Post.findByIdAndDelete(idPost)
 }
 

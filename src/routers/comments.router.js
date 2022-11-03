@@ -2,7 +2,7 @@ import express from 'express'
 import jwt_decode from 'jwt-decode'
 import * as commentUseCase from '../useCases/comments.use.js'
 import { auth } from '../middlewares/auth.js'
-import { accessOwnerAccount } from '../middlewares/ownerAccount.js'
+import { accessOwnerPostsOrComments } from '../middlewares/ownerAccount.js'
 const router = express.Router()
 
 // GET /comments
@@ -45,7 +45,7 @@ router.post('/', auth, async (request, response, next) => {
 })
 
 // DELETE /comments
-router.delete('/:id', auth, accessOwnerAccount, async (request, response, next) => {
+router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
   try {
     const { id } = request.params
     const commentDeleted = await commentUseCase.deleteById(id)
@@ -61,7 +61,7 @@ router.delete('/:id', auth, accessOwnerAccount, async (request, response, next) 
 })
 
 // EDIT /comments
-router.patch('/:id', auth, accessOwnerAccount, async (request, response, next) => {
+router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
   try {
     const { id } = request.params
     const unupdateComment = request.body

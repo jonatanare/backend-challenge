@@ -16,14 +16,14 @@ async function addComment (newComment, userCurrent) {
 }
 
 async function deleteById (idComment) {
-  const commentFinded = await Comment.findById(idComment)
-  if (!commentFinded) throw new StatusHttp('Comment not found', 400)
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) throw new StatusHttp('Comment not found', 400)
   return Comment.findByIdAndDelete(idComment)
 }
 
 async function update (idComment, unupdatedComment) {
-  const commentFinded = await Comment.findById(idComment)
-  if (!commentFinded) throw new StatusHttp('Comment not found', 400)
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) throw new StatusHttp('Comment not found', 400)
   return Comment.findByIdAndUpdate(idComment, unupdatedComment, { new: true })
 }
 

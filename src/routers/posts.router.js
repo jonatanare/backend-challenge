@@ -2,7 +2,7 @@ import express from 'express'
 import jwt_decode from 'jwt-decode'
 import * as postsUsesCases from '../useCases/posts.use.js'
 import { auth } from '../middlewares/auth.js'
-import { accessOwnerPosts } from '../middlewares/ownerAccount.js'
+import { accessOwnerPostsOrComments } from '../middlewares/ownerAccount.js'
 const router = express.Router()
 
 // GET /posts
@@ -43,10 +43,10 @@ router.get('/comments', async (request, response, next) => {
 })
 
 // GET /posts /:id
-router.get('/', async (request, response, next) => {
+router.get('/:id', async (request, response, next) => {
   try {
-    const { idPost } = request.params
-    const getPost = await postsUsesCases.getById(idPost)
+    const { id } = request.params
+    const getPost = await postsUsesCases.getById(id)
     response.json({
       succes: true,
       message: 'Post found',
@@ -79,11 +79,10 @@ router.post('/', auth, async (request, response, next) => {
 })
 
 // DELETE /posts
-router.delete('/:id', auth, accessOwnerPosts, async (request, response, next) => {
+router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
   try {
     const { id } = request.params
     const postDeleted = await postsUsesCases.deleteById(id)
-    console.log(postDeleted)
     response.json({
       succes: true,
       data: {
@@ -97,7 +96,7 @@ router.delete('/:id', auth, accessOwnerPosts, async (request, response, next) =>
 })
 
 // EDIT /posts
-router.patch('/:id', auth, accessOwnerPosts, async (request, response, next) => {
+router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
   try {
     const { id } = request.params
     const unUpdatePost = request.body

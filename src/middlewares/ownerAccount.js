@@ -1,5 +1,6 @@
 
 import { Post } from '../models/posts.model.js'
+import { Comment } from '../models/comment.model.js'
 import { StatusHttp } from '../libs/statusHttp.js'
 
 
@@ -24,16 +25,16 @@ function accessOwnerAccount (request, response, next) {
   }
 }
 
-async function accessOwnerPosts(request, response, next) {
+async function accessOwnerPostsOrComments(request, response, next) {
   try {
     const { userCurrent } = request /* id de user current */
 
-    const idPost = request.params.id /* se cambia de nombre a rutas idCompany a id */
-    if (!idPost) throw new StatusHttp('Post not found 1MIDDL!')
-    const postFinded = await Post.findById(idPost)
-    if (!postFinded) throw new StatusHttp('Post not found 2 MIDDL!')
-    const idUser = postFinded.author._id.valueOf()
-    console.log('id del usuario logeado(token)', userCurrent)
+    const id = request.params.id /* se cambia de nombre a rutas idCompany a id */
+    if (!id) throw new StatusHttp('Id not found!')
+    const postOrCommentId = await Post.findById(id) || await Comment.findById(id)
+    if (!postOrCommentId) throw new StatusHttp('Request not found!')
+    const idUser = postOrCommentId.author._id.valueOf()
+    console.log('id del usuario logeado', userCurrent)
     console.log('id del usuario a editar ', idUser)
 
     if (userCurrent !== idUser) throw new Error('You can only edit your own Account')
@@ -52,5 +53,5 @@ async function accessOwnerPosts(request, response, next) {
 
 export { 
   accessOwnerAccount,
-  accessOwnerPosts
+  accessOwnerPostsOrComments,
  }

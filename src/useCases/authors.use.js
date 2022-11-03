@@ -17,20 +17,20 @@ async function create (newAuthor) {
   return (await Author.create({ ...newAuthor, password: encryptedPassword }))
 }
 async function update (idAuthor, unupdatedAuthor) {
-  const authorFinded = await Author.findById(idAuthor)
-  if (!authorFinded) throw new StatusHttp('Author not found', 400)
+  const authorFound = await Author.findById(idAuthor)
+  if (!authorFound) throw new StatusHttp('Author not found', 400)
   return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor, { new: true })
 }
 
 async function getById (idAuthor) {
-  const authorFinded = await Author.findById(idAuthor)
-  if (!authorFinded) throw new StatusHttp('Author not found', 400)
-  return Author.findById(authorFinded)
+  const authorFound = await Author.findById(idAuthor)
+  if (!authorFound) throw new StatusHttp('Author not found', 400)
+  return Author.findById(authorFound)
 }
 
 async function deleteById (idAuthor) {
-  const authorFinded = await Author.findById(idAuthor).populate('posts')
-  if (!authorFinded) throw new StatusHttp('Author not found', 400)
+  const authorFound = await Author.findById(idAuthor).populate('posts')
+  if (!authorFound) throw new StatusHttp('Author not found', 400)
   return Author.findByIdAndDelete(idAuthor)
 }
 
