@@ -23,6 +23,23 @@ router.get('/', async (request, response, next) => {
   }
 })
 
+// GET /comments by Id
+router.get('/:id', async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const getComment = await commentUseCase.getById(id)
+    response.json({
+      succes: true,
+      message: 'Post found',
+      data: {
+        post: getComment
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
 // POST /comments
 router.post('/', auth, async (request, response, next) => {
   try {

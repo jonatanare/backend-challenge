@@ -6,6 +6,12 @@ async function getAll () {
   return Comment.find({}).populate({ path: 'author', select: ['name'] })
 }
 
+async function getById (idComment) {
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) throw new StatusHttp('Post not found', 400)
+  return Comment.findById(idComment)
+}
+
 async function addComment (newComment, userCurrent) {
   console.log({ ...newComment, author: userCurrent })
   const commentCreated = await Comment.create({ ...newComment, author: userCurrent })
@@ -29,6 +35,7 @@ async function update (idComment, unupdatedComment) {
 
 export {
   getAll,
+  getById,
   addComment,
   deleteById,
   update

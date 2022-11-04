@@ -96,7 +96,7 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
 })
 
 // EDIT /posts
-router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
+router.patch('/:id', auth, async (request, response, next) => {
   try {
     const { id } = request.params
     const unUpdatePost = request.body
@@ -114,11 +114,13 @@ router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response,
   }
 })
 
-router.patch('/:id/reactions', auth, async (request, response, next) => {
+router.patch('/:id/reactions', async (request, response, next) => {
   try {
     const { id } = request.params /* post ID */
-    const { userCurrent } = request
-    const postUpdated = await postsUsesCases.addReaction(id, userCurrent)
+    const  userCurrent  = request.body
+    
+    
+    const postUpdated = await postsUsesCases.addReaction(id, userCurrent.author)
 
     response.json({
       succes: true,
