@@ -8,6 +8,10 @@ const authorSchema = new mongoose.Schema({
     maxLength: 100,
     trim: true
   },
+  username: {
+    type: String, 
+    required: false
+  },
   biography: {
     type: String,
     required: true,

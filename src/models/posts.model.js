@@ -48,6 +48,10 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Author'
   }, 
+  slug: {
+    type: String, 
+    required: false
+  },
   reactions: 
     [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reaction' }]
   
