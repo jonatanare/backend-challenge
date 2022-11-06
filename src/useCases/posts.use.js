@@ -27,7 +27,7 @@ async function update (idPost, unupdatedPost, updatedAt= Date.now()) {
 async function getById (idPost) {
   const postFound = await Post.findById(idPost)
   if (!postFound) throw new StatusHttp('Post not found', 400)
-  return Post.findById(idPost).populate({ path: 'reactions' })
+  return Post.findById(idPost).populate({ path: 'comments' }).populate({ path: 'reactions' })
 }
 
 async function deleteById (idPost) {
