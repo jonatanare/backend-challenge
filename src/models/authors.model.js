@@ -8,6 +8,10 @@ const authorSchema = new mongoose.Schema({
     maxLength: 100,
     trim: true
   },
+  profilePic: {
+    type: String,
+    required: false
+  },
   username: {
     type: String,
     required: false
@@ -21,6 +25,7 @@ const authorSchema = new mongoose.Schema({
   },
   initialDate: {
     type: Date,
+    default: Date.now(),
     required: true
   },
   nacionality: {

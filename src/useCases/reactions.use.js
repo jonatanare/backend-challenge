@@ -3,11 +3,16 @@ import { Post } from '../models/posts.model.js'
 import { StatusHttp } from '../libs/statusHttp.js'
 
 async function addReaction (postId, userCurrent) {
-/*     const author = postAuthors
-    const authorFound = await Author.findOne({ author })
-    if (authorFound) throw new StatusHttp('You already like this post!', 400) */
+  const postFound = await Post.findById(postId).populate('reactions')
+  if (postFound == undefined) {
+    throw new StatusHttp('Post not found!', 400)
+  }
+  const reactionFound = postFound.reactions.find(reaction => reaction.author.valueOf() === userCurrent)
+
+  if (reactionFound) {
+    throw new StatusHttp('You already like this post!', 400)
+  }
   const reactionCreated = await Reaction.create({ ...postId, author: userCurrent })
-  console.log('userCurrent', userCurrent)
   await Post.findByIdAndUpdate(postId, {
     $push: { reactions: reactionCreated._id }
   })
@@ -20,13 +25,20 @@ async function getAll () {
 
 async function getById (idReaction) {
   const reactionFound = await Reaction.findById(idReaction)
-  if (!reactionFound) throw new StatusHttp('Post not found', 400)
+  if (!reactionFound) {
+    throw new StatusHttp('Post not found', 400)
+  }
   return Reaction.findById(idReaction).populate({ path: 'author', select: ['name'] })
 }
 
-async function deleteById (idReaction) {
+async function deleteById (idReaction, userCurrent) {
   const reactionFound = await Reaction.findById(idReaction)
-  if (!reactionFound) throw new StatusHttp('Reaction not found', 400)
+  if (!reactionFound) {
+    throw new StatusHttp('Reaction not found', 400)
+  }
+  if (reactionFound.author.valueOf() !== userCurrent) {
+    throw new StatusHttp('You cannot delete another reaction', 400)
+  }
   return Reaction.findByIdAndDelete(idReaction)
 }
 

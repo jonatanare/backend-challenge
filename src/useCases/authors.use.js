@@ -14,7 +14,8 @@ async function create (newAuthor) {
   const { email, password } = newAuthor
   const authorFound = await Author.findOne({ email })
   if (authorFound) {
-    throw new StatusHttp('This author already exist!', 400)}
+    throw new StatusHttp('This author already exist!', 400)
+  }
   const encryptedPassword = await bcrypt.hash(password)
   return await Author.create({ ...newAuthor, password: encryptedPassword })
 }
@@ -22,7 +23,8 @@ async function create (newAuthor) {
 async function update (idAuthor, unupdatedAuthor) {
   const authorFound = await Author.findById(idAuthor)
   if (!authorFound) {
-  throw new StatusHttp('Author not found', 400)}
+    throw new StatusHttp('Author not found', 400)
+  }
   return Author.findByIdAndUpdate(idAuthor, unupdatedAuthor, { new: true })
 }
 
@@ -31,7 +33,8 @@ async function getById (idAuthor) {
     path: 'posts'
   })
   if (!authorFound) {
-    throw new StatusHttp('Author not found', 400)}
+    throw new StatusHttp('Author not found', 400)
+  }
   return Author.findById(authorFound).populate({
     path: 'posts',
     select: ['title']
@@ -41,7 +44,8 @@ async function getById (idAuthor) {
 async function deleteById (idAuthor) {
   const authorFound = await Author.findById(idAuthor)
   if (!authorFound) {
-    throw new StatusHttp('Author not found', 400)}
+    throw new StatusHttp('Author not found', 400)
+  }
   return Author.findByIdAndDelete(idAuthor)
 }
 

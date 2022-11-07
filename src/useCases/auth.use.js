@@ -13,7 +13,13 @@ async function login (email, password) {
     throw new StatusHttp('try again!')
   }
 
-  return jwt.sign({ id: authorFound._id })
+  return {
+    token: jwt.sign({ id: authorFound._id }),
+    id: authorFound._id,
+    username: authorFound.username,
+    name: authorFound.name,
+    profilePic: authorFound.profilePic
+  }
 }
 
 export {
