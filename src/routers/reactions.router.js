@@ -55,7 +55,6 @@ router.patch('/:id', auth, async (request, response, next) => {
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -68,7 +67,7 @@ router.delete('/:id', auth, async (request, response, next) => {
     const reactionDeleted = await reactionsUseCase.deleteById(id, userCurrent)
     const success = reactionDeleted !== null && reactionDeleted !== undefined
     response.json({
-      success: success,
+      success,
       message: 'Reaction deleted'
     })
   } catch (error) {

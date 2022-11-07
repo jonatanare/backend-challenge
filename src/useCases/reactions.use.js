@@ -32,12 +32,11 @@ async function getById (idReaction) {
 }
 
 async function deleteById (idReaction, userCurrent) {
-  console.log(idReaction)
   const reactionFound = await Reaction.findById(idReaction)
   if (!reactionFound) {
     throw new StatusHttp('Reaction not found', 400)
   }
-  if(reactionFound.author.valueOf() !== userCurrent){
+  if (reactionFound.author.valueOf() !== userCurrent) {
     throw new StatusHttp('You cannot delete another reaction', 400)
   }
   return Reaction.findByIdAndDelete(idReaction)

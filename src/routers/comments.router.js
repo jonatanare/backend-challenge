@@ -68,7 +68,7 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
     const commentDeleted = await commentUseCase.deleteById(id)
     response.json({
       success: true,
-      message: 'Comment deleted',
+      message: 'Comment deleted'
     })
   } catch (error) {
     console.log(error)
