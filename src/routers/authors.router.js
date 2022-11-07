@@ -28,7 +28,7 @@ router.get('/', async (request, response, next) => {
     next(error)
   }
 })
-
+ 
 // PLUS endpoint
 router.get('/:id', async (request, response, next) => {
   try {
@@ -68,6 +68,7 @@ router.post('/', async (request, response, next) => {
   }
 })
 
+// DELETE /Authors
 router.delete('/:id', auth, accessOwnerAccount, async (request, response, next) => {
   try {
     const { id } = request.params

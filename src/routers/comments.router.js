@@ -29,7 +29,7 @@ router.get('/:id', async (request, response, next) => {
     const { id } = request.params
     const getComment = await commentUseCase.getById(id)
     response.json({
-      succes: true,
+      success: true,
       message: 'Post found',
       data: {
         post: getComment
@@ -51,7 +51,7 @@ router.post('/', auth, async (request, response, next) => {
 
     console.log(newComment)
     response.json({
-      succes: true,
+      success: true,
       message: 'Comment published',
       data: newComment
     })
@@ -67,7 +67,7 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
     const { id } = request.params
     const commentDeleted = await commentUseCase.deleteById(id)
     response.json({
-      succes: true,
+      success: true,
       message: 'Comment deleted',
       data: commentDeleted
     })
@@ -86,7 +86,7 @@ router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response,
 
     response.json({
       success: true,
-      message: 'comment updated',
+      message: 'Comment updated',
       data: {
         comment: commentUpdated
       }

@@ -1,6 +1,7 @@
 import express from 'express'
 import jwt_decode from 'jwt-decode'
 import * as postsUsesCases from '../useCases/posts.use.js'
+import * as reactionsUsesCases from '../useCases/reactions.use.js'
 import { auth } from '../middlewares/auth.js'
 import { accessOwnerPostsOrComments } from '../middlewares/ownerAccount.js'
 const router = express.Router()
@@ -114,24 +115,6 @@ router.patch('/:id', auth, async (request, response, next) => {
   }
 })
 
-router.patch('/:id/reactions', async (request, response, next) => {
-  try {
-    const { id } = request.params /* post ID */
-    const  userCurrent  = request.body
-    
-    
-    const postUpdated = await postsUsesCases.addReaction(id, userCurrent.author)
 
-    response.json({
-      succes: true,
-      message: 'Post updated',
-      data: {
-        post: postUpdated
-      }
-    })
-  } catch (error) {
-    next(error)
-  }
-})
 
 export default router

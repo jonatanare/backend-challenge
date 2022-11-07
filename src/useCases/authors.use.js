@@ -23,13 +23,13 @@ async function update (idAuthor, unupdatedAuthor) {
 }
 
 async function getById (idAuthor) {
-  const authorFound = await Author.findById(idAuthor)
+  const authorFound = await Author.findById(idAuthor).populate({path: 'posts'})
   if (!authorFound) throw new StatusHttp('Author not found', 400)
   return Author.findById(authorFound)
 }
 
 async function deleteById (idAuthor) {
-  const authorFound = await Author.findById(idAuthor).populate('posts')
+  const authorFound = await Author.findById(idAuthor)
   if (!authorFound) throw new StatusHttp('Author not found', 400)
   return Author.findByIdAndDelete(idAuthor)
 }
