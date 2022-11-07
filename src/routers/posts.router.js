@@ -1,160 +1,115 @@
-//endpoints
+import express from 'express'
+import jwt_decode from 'jwt-decode'
+import * as postsUsesCases from '../useCases/posts.use.js'
+import * as reactionsUsesCases from '../useCases/reactions.use.js'
+import { auth } from '../middlewares/auth.js'
+import { accessOwnerPostsOrComments } from '../middlewares/ownerAccount.js'
+const router = express.Router()
 
-import express from "express";
-import jwt_decode from "jwt-decode";
-import * as postsUsesCases from "../useCases/posts.use.js";
-import { StatusHttp } from "../libs/statusHttp.js"; //DÒNDE SE UTILIZA? Sepa dios
-import { auth } from "../middlewares/auth.js";
-
-
-const router = express.Router();
-
-//Routers o endpoints
- router.get("/", async (request, response, next) => {
+// GET /posts
+router.get('/', async (request, response, next) => {
   try {
-    const {page, limit} = request.query
-    const skip = (page-1)*10;
-    const allPosts = await postsUsesCases.getAll().populate({path:'author', select:['name']}).populate({path:'comments', select:['comment']}).skip(skip).limit(limit);
-    response.json({
-      succes: true,
-      data: {
-        posts: allPosts
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-}); 
+    const { page, limit } = request.query
+    const skip = (page - 1) * 10
+    const allPosts = await postsUsesCases.getAll().populate({ path: 'author', select: ['name'] }).skip(skip).limit(limit)
 
-//GET /posts /:id
-
-router.get("/:idPost", async (request, response, next) => {
-  try {
-    const { idPost } = request.params;
-    const getPost = await postsUsesCases.getById(idPost);
-
-    if (!idPost) {
-      throw new StatusHttp("Post no encontrado", 401);
-    }
-    response.json({
-      succes: true,
-      data: {
-        post: getPost,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-router.get("/:idPost", async (request, response, next) => {
-  try {
-    const { idPost } = request.params;
-    const getPost = await postsUsesCases.getById(idPost);
-
-    if (!idPost) {
-      throw new StatusHttp("Post no encontrado", 401);
-    }
-    response.json({
-      succes: true,
-      data: {
-        post: getPost,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-//POST /Posts
-router.post("/", auth, async (request, response, next) => {
-  try {
-    const token = request.headers.authorization;
-    const post = request.body; //abstrayendo la data del body(en este caso de insomnia) same -> const newPost = request.body
-    const { id } = jwt_decode(token);
-    console.log('ID: ',id);
-    console.log('Body Post: ',post);
-    const postCreated = await postsUsesCases.create(post, id)
-    console.log(postCreated);
-    //         const { body: newPost } = request; //abstrayendo la data del body(en este caso de insomnia) same -> const newpost = request.body
-     
-      
     response.json({
       success: true,
-      message: "new post created",
+      message: 'All posts',
       data: {
-        posts: postCreated,
-      },
-    });
+        posts: allPosts
+      }
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-router.delete("/:idPost", async (request, response, next) => {
+// GET post with comments
+router.get('/comments', async (request, response, next) => {
   try {
-    let { idPost } = request.params;
-    const postDeleted = await postsUsesCases.deleteById(idPost);
-    console.log(postDeleted);
-    if (!postDeleted) {
-      throw new StatusHttp("post no encontrado");
-    }
+    const allPosts = await postsUsesCases.getAll().populate({ path: 'comments', select: ['comment'] })
     response.json({
-      succes: true,
+      success: true,
+      message: 'All posts',
       data: {
-        post: postDeleted,
-        message: "Este post ha sido eliminado",
-      },
-    });
+        posts: allPosts
+      }
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-router.patch("/:idPost", async (request, response, next) => {
+// GET /posts /:id
+router.get('/:id', async (request, response, next) => {
   try {
-    const { idPost } = request.params;
-    const unUpdatePost = request.body;
-    console.log('unupadetspost', unUpdatePost);
-    const postUpdated = await postsUsesCases.update(idPost, unUpdatePost)
-    console.log('postupdted', postUpdated);
-    
-    if (!postUpdated) {
-      throw new StatusHttp("post not found");
-    }
+    const { id } = request.params
+    const getPost = await postsUsesCases.getById(id)
     response.json({
-      succes: true,
-      message: 'post updated',
+      success: true,
+      message: 'Post found',
       data: {
-        post: postUpdated,
-      },
-    });
+        post: getPost
+      }
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-//PLUS
-/* router.get("/", async (request, response) => {
+// CREATE /Posts
+router.post('/', auth, async (request, response, next) => {
   try {
-    const {page, limit} = request.query
-    const skip = (page-1)*10;
-
-    const post = await Post.find().skip(skip).limit(limit)
-console.log(page);
-    
-    
+    const token = request.headers.authorization
+    const post = request.body
+    const { id } = jwt_decode(token)
+    const postCreated = await postsUsesCases.create(post, id)
     response.json({
-      succes: true,
+      success: true,
+      message: 'New post created',
       data: {
-        posts: post
-      },
-    });
+        posts: postCreated
+      }
+    })
   } catch (error) {
-    console.log(error);
-    next(error);
+    next(error)
   }
-}); */
+})
+
+// DELETE /posts
+router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const postDeleted = await postsUsesCases.deleteById(id)
+    response.json({
+      success: true,
+      data: {
+        message: 'Post deleted'
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// EDIT /posts
+router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const unUpdatePost = request.body
+    const postUpdated = await postsUsesCases.update(id, unUpdatePost)
+
+    response.json({
+      success: true,
+      message: 'Post updated',
+      data: {
+        post: postUpdated
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default router

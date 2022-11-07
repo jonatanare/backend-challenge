@@ -1,30 +1,44 @@
-import { Comment } from "../models/comment.model.js";
-import { Post } from "../models/posts.model.js";
+import { StatusHttp } from '../libs/statusHttp.js'
+import { Comment } from '../models/comment.model.js'
+import { Post } from '../models/posts.model.js'
 
-// GET /comments
-async function getAll() {
-    return Comment.find({}).populate({path: 'author', select: ['name']})
+async function getAll () {
+  return Comment.find({}).populate({ path: 'author', select: ['name'] })
 }
-// POST /cooments/
-async function addComment(newComment, userCurrent) {
-  console.log({ ...newComment, author: userCurrent });
 
-  let commentCreated = await Comment.create({...newComment,author: userCurrent,
-  });
+async function getById (idComment) {
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) {
+    throw new StatusHttp('Post not found', 400)}
+  return Comment.findById(idComment)
+}
 
+async function addComment (newComment, userCurrent) {
+  const commentCreated = await Comment.create({ ...newComment, author: userCurrent })
   await Post.findByIdAndUpdate(newComment.post_id, {
-    $push: { comments: commentCreated._id },
-  });
-
-  return commentCreated;
+    $push: { comments: commentCreated._id }
+  })
+  return commentCreated
 }
 
-function deleteById(idComment) {
-  return Comment.findByIdAndDelete(idComment);
+async function deleteById (idComment) {
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) {
+    throw new StatusHttp('Comment not found', 400)}
+  return Comment.findByIdAndDelete(idComment)
 }
 
-function update(idComment, unupdatedComment) {
-    return Comment.findByIdAndUpdate(idComment, unupdatedComment, { new: true })
+async function update (idComment, unupdatedComment) {
+  const commentFound = await Comment.findById(idComment)
+  if (!commentFound) {
+    throw new StatusHttp('Comment not found', 400)}
+  return Comment.findByIdAndUpdate(idComment, unupdatedComment, { new: true })
 }
 
-export { getAll, addComment, deleteById, update };
+export {
+  getAll,
+  getById,
+  addComment,
+  deleteById,
+  update
+}

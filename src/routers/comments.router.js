@@ -1,75 +1,87 @@
-import express from "express";
-import jwt_decode from "jwt-decode";
-import * as commentUseCase from "../useCases/comments.use.js";
-import { auth } from "../middlewares/auth.js";
-import { StatusHttp } from "../libs/statusHttp.js";
-const router = express.Router();
-router.get('/', async(request, response, next) => {
+import express from 'express'
+import jwt_decode from 'jwt-decode'
+import * as commentUseCase from '../useCases/comments.use.js'
+import { auth } from '../middlewares/auth.js'
+import { accessOwnerPostsOrComments } from '../middlewares/ownerAccount.js'
+const router = express.Router()
+
+// GET /comments
+router.get('/', async (request, response, next) => {
   try {
     const allComments = await commentUseCase.getAll()
 
     response.json({
       success: true,
+      message: 'All comments',
       data: {
         comments: allComments
       }
     })
   } catch (error) {
-    console.log(error);
     next(error)
   }
 })
-router.post("/", auth, async (request, response, next) => {
-  try {
-    const { body: comment } = request;
-    const token = request.headers.authorization;
-    const { id } = jwt_decode(token);
-    console.log(id);
-    const newComment = await commentUseCase.addComment(comment, id);
 
-    console.log(newComment);
+// GET /comments by Id
+router.get('/:id', async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const getComment = await commentUseCase.getById(id)
     response.json({
-      succes: true,
-      msg: "comment published",
-      data: newComment,
-    });
+      success: true,
+      message: 'Post found',
+      data: {
+        post: getComment
+      }
+    })
   } catch (error) {
-    console.log(error);
-    next(error);
+    next(error)
   }
-});
+})
 
-router.delete("/:idComment", auth, async (request, response, next) => {
+// POST /comments
+router.post('/', auth, async (request, response, next) => {
   try {
-    const { idComment } = request.params;
-    const commentDeleted = await commentUseCase.deleteById(idComment);
-    console.log(commentDeleted);
-    if (!idComment) {
-      throw new StatusHttp("comment not found");
-    }
-
-    response.json({
-      succes: true,
-      msg: "Comment deleted",
-      data: commentDeleted,
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-});
-
-router.patch('/:idComment', auth, async (request, response, next) => {
-  try {
-    const { idComment } = request.params
-    const unupdateComment = request.body
-    const commentUpdated = await commentUseCase.update(idComment, unupdateComment)
-
-    if(!idComment) throw new StatusHttp('comment not found')
+    const { body: comment } = request
+    const token = request.headers.authorization
+    const { id } = jwt_decode(token)
+    const newComment = await commentUseCase.addComment(comment, id)
 
     response.json({
       success: true,
-      message: 'comment updated',
+      message: 'Comment published',
+      data: newComment
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// DELETE /comments
+router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const commentDeleted = await commentUseCase.deleteById(id)
+    response.json({
+      success: true,
+      message: 'Comment deleted'
+
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// EDIT /comments
+router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
+  try {
+    const { id } = request.params
+    const unupdateComment = request.body
+    const commentUpdated = await commentUseCase.update(id, unupdateComment)
+
+    response.json({
+      success: true,
+      message: 'Comment updated',
       data: {
         comment: commentUpdated
       }
@@ -78,4 +90,4 @@ router.patch('/:idComment', auth, async (request, response, next) => {
     next(error)
   }
 })
-export default router;
+export default router
