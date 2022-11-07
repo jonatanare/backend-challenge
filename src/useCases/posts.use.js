@@ -29,7 +29,8 @@ async function create (newPost, userCurrent) {
 async function update (idPost, unupdatedPost, updatedAt = Date.now()) {
   const postFound = await Post.findById(idPost)
   if (!postFound) {
-    throw new StatusHttp('Post not found!')}
+    throw new StatusHttp('Post not found!')
+  }
   const postUpdated = Post.findByIdAndUpdate(idPost, {
     ...unupdatedPost,
     updatedAt
@@ -41,8 +42,15 @@ async function getById (idPost) {
   const postFound = await Post.findById(idPost)
 
   if (!postFound) {
-    throw new StatusHttp('Post not found', 400)}
-  return Post.findById(idPost).populate('comments')
+    throw new StatusHttp('Post not found', 400)
+  }
+  return Post.findById(idPost).populate({
+    path: 'comments',
+    populate: {
+      path: 'author',
+      select: ['name']
+    }
+  })
     .populate({
       path: 'reactions',
       populate: {
@@ -54,7 +62,9 @@ async function getById (idPost) {
 
 async function deleteById (idPost) {
   const postFound = await Post.findById(idPost)
-  if (!postFound) throw new StatusHttp('Post not found')
+  if (!postFound) {
+    throw new StatusHttp('Post not found')
+  }
   return Post.findByIdAndDelete(idPost)
 }
 

@@ -20,7 +20,7 @@ router.get('/', async (request, response, next) => {
       success: true,
       message: 'All authors',
       data: {
-        authors: allAuthors, fix
+        authors: allAuthors
       }
     })
   } catch (error) {

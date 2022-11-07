@@ -18,6 +18,7 @@ router.get('/', async (request, response, next) => {
       }
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })
@@ -45,14 +46,17 @@ router.post('/', auth, async (request, response, next) => {
     const { body: comment } = request
     const token = request.headers.authorization
     const { id } = jwt_decode(token)
+    console.log(id)
     const newComment = await commentUseCase.addComment(comment, id)
 
+    console.log(newComment)
     response.json({
       success: true,
       message: 'Comment published',
       data: newComment
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })
@@ -64,10 +68,10 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
     const commentDeleted = await commentUseCase.deleteById(id)
     response.json({
       success: true,
-      message: 'Comment deleted'
-
+      message: 'Comment deleted',
     })
   } catch (error) {
+    console.log(error)
     next(error)
   }
 })

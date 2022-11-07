@@ -9,7 +9,8 @@ async function getAll () {
 async function getById (idComment) {
   const commentFound = await Comment.findById(idComment)
   if (!commentFound) {
-    throw new StatusHttp('Post not found', 400)}
+    throw new StatusHttp('Post not found', 400)
+  }
   return Comment.findById(idComment)
 }
 
@@ -24,14 +25,16 @@ async function addComment (newComment, userCurrent) {
 async function deleteById (idComment) {
   const commentFound = await Comment.findById(idComment)
   if (!commentFound) {
-    throw new StatusHttp('Comment not found', 400)}
+    throw new StatusHttp('Comment not found', 400)
+  }
   return Comment.findByIdAndDelete(idComment)
 }
 
 async function update (idComment, unupdatedComment) {
   const commentFound = await Comment.findById(idComment)
   if (!commentFound) {
-    throw new StatusHttp('Comment not found', 400)}
+    throw new StatusHttp('Comment not found', 400)
+  }
   return Comment.findByIdAndUpdate(idComment, unupdatedComment, { new: true })
 }
 
