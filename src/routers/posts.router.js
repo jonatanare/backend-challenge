@@ -14,31 +14,29 @@ router.get('/', async (request, response, next) => {
     const allPosts = await postsUsesCases.getAll().populate({ path: 'author', select: ['name'] }).skip(skip).limit(limit)
 
     response.json({
-      succes: true,
+      success: true,
       message: 'All posts',
       data: {
         posts: allPosts
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
 
-// get post with comments
+// GET post with comments
 router.get('/comments', async (request, response, next) => {
   try {
     const allPosts = await postsUsesCases.getAll().populate({ path: 'comments', select: ['comment'] })
     response.json({
-      succes: true,
+      success: true,
       message: 'All posts',
       data: {
         posts: allPosts
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -49,7 +47,7 @@ router.get('/:id', async (request, response, next) => {
     const { id } = request.params
     const getPost = await postsUsesCases.getById(id)
     response.json({
-      succes: true,
+      success: true,
       message: 'Post found',
       data: {
         post: getPost
@@ -85,9 +83,8 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
     const { id } = request.params
     const postDeleted = await postsUsesCases.deleteById(id)
     response.json({
-      succes: true,
+      success: true,
       data: {
-        post: postDeleted,
         message: 'Post deleted'
       }
     })
@@ -97,14 +94,14 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
 })
 
 // EDIT /posts
-router.patch('/:id', auth, async (request, response, next) => {
+router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response, next) => {
   try {
     const { id } = request.params
     const unUpdatePost = request.body
     const postUpdated = await postsUsesCases.update(id, unUpdatePost)
 
     response.json({
-      succes: true,
+      success: true,
       message: 'Post updated',
       data: {
         post: postUpdated
@@ -114,7 +111,5 @@ router.patch('/:id', auth, async (request, response, next) => {
     next(error)
   }
 })
-
-
 
 export default router

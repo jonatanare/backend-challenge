@@ -17,35 +17,32 @@ router.get('/', async (request, response, next) => {
       .skip(skip)
       .limit(limit)
     response.json({
-      succes: true,
+      success: true,
       message: 'All authors',
       data: {
-        authors: allAuthors
+        authors: allAuthors, fix
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
- 
+
 // PLUS endpoint
 router.get('/:id', async (request, response, next) => {
   try {
-    const { id} = request.params
+    const { id } = request.params
 
-    const getAuthor = await authorsUsesCases
-      .getById(id)
+    const getAuthor = await authorsUsesCases.getById(id)
 
     response.json({
-      succes: true,
+      success: true,
       message: 'Author',
       data: {
         author: getAuthor
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -56,55 +53,57 @@ router.post('/', async (request, response, next) => {
     const { body: newAuthor } = request
     const authorCreated = await authorsUsesCases.create(newAuthor)
 
-    console.log(authorCreated)
     response.json({
-      succes: true,
+      success: true,
       message: 'Author created',
       data: authorCreated
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
 
 // DELETE /Authors
-router.delete('/:id', auth, accessOwnerAccount, async (request, response, next) => {
-  try {
-    const { id } = request.params
-    const authorDeleted = await authorsUsesCases.deleteById(id)
-    console.log(authorDeleted)
-    response.json({
-      success: true,
-      message: 'Author deleted',
-      data: {
-        author: authorDeleted
-      }
-    })
-  } catch (error) {
-    next(error)
+router.delete(
+  '/:id',
+  auth,
+  accessOwnerAccount,
+  async (request, response, next) => {
+    try {
+      const { id } = request.params
+      const authorDeleted = await authorsUsesCases.deleteById(id)
+      response.json({
+        success: true,
+        message: 'Author deleted'
+      })
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
 // EDIT /Authors
-router.patch('/:id', auth, accessOwnerAccount, async (request, response, next) => {
-  try {
-    const { id } = request.params
-    const unUpdateAuthor = request.body
-    console.log(unUpdateAuthor)
+router.patch(
+  '/:id',
+  auth,
+  accessOwnerAccount,
+  async (request, response, next) => {
+    try {
+      const { id } = request.params
+      const unUpdateAuthor = request.body
 
-    const authorUpdated = await authorsUsesCases.update(id, unUpdateAuthor)
-    response.json({
-      succes: true,
-      message: 'Author updated',
-      data: {
-        author: authorUpdated
-      }
-    })
-  } catch (error) {
-    console.log(error)
-    next(error)
+      const authorUpdated = await authorsUsesCases.update(id, unUpdateAuthor)
+      response.json({
+        success: true,
+        message: 'Author updated',
+        data: {
+          author: authorUpdated
+        }
+      })
+    } catch (error) {
+      next(error)
+    }
   }
-})
+)
 
 export default router

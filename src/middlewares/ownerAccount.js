@@ -3,7 +3,6 @@ import { Post } from '../models/posts.model.js'
 import { Comment } from '../models/comment.model.js'
 import { StatusHttp } from '../libs/statusHttp.js'
 
-
 function accessOwnerAccount (request, response, next) {
   try {
     const { userCurrent } = request /* token decoded */
@@ -25,7 +24,7 @@ function accessOwnerAccount (request, response, next) {
   }
 }
 
-async function accessOwnerPostsOrComments(request, response, next) {
+async function accessOwnerPostsOrComments (request, response, next) {
   try {
     const { userCurrent } = request /* id de user current */
 
@@ -50,8 +49,7 @@ async function accessOwnerPostsOrComments(request, response, next) {
   }
 }
 
-
-export { 
+export {
   accessOwnerAccount,
-  accessOwnerPostsOrComments,
- }
+  accessOwnerPostsOrComments
+}

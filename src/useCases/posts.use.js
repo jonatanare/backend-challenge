@@ -1,61 +1,61 @@
-import { Post } from "../models/posts.model.js";
-import { Author } from "../models/authors.model.js";
-import { StatusHttp } from "../libs/statusHttp.js";
+import { Post } from '../models/posts.model.js'
+import { Author } from '../models/authors.model.js'
+import { StatusHttp } from '../libs/statusHttp.js'
 
-function getAll() {
+function getAll () {
   return Post.find({})
     .populate({
-      path: "comments",
-      select: ["comment"],
+      path: 'comments',
+      select: ['comment']
     })
     .populate({
-      path: "reactions",
+      path: 'reactions',
       populate: {
-        path: "author",
-        select: ["name"],
-      },
-    });
+        path: 'author',
+        select: ['name']
+      }
+    })
 }
 
-async function create(newPost, userCurrent) {
-  console.log({ ...newPost, author: userCurrent });
-  const postCreated = await Post.create({ ...newPost, author: userCurrent });
-  console.log(newPost, userCurrent);
+async function create (newPost, userCurrent) {
+  const postCreated = await Post.create({ ...newPost, author: userCurrent })
   await Author.findByIdAndUpdate(userCurrent, {
-    $push: { posts: postCreated._id },
-  });
+    $push: { posts: postCreated._id }
+  })
 
-  return postCreated;
+  return postCreated
 }
 
-async function update(idPost, unupdatedPost, updatedAt = Date.now()) {
-  const postFound = await Post.findById(idPost);
-  if (!postFound) throw new StatusHttp("Post not found!");
+async function update (idPost, unupdatedPost, updatedAt = Date.now()) {
+  const postFound = await Post.findById(idPost)
+  if (!postFound) {
+    throw new StatusHttp('Post not found!')}
   const postUpdated = Post.findByIdAndUpdate(idPost, {
     ...unupdatedPost,
-    updatedAt: updatedAt,
-  });
-  return postUpdated;
+    updatedAt
+  })
+  return postUpdated
 }
 
-async function getById(idPost) {
+async function getById (idPost) {
   const postFound = await Post.findById(idPost)
 
-  if (!postFound) throw new StatusHttp("Post not found", 400);
+  if (!postFound) {
+    throw new StatusHttp('Post not found', 400)}
   return Post.findById(idPost).populate('comments')
-  .populate({
-    path: "reactions",
-    populate: {
-      path: "author",
-      select: ["name"],
-    },
-  })
+    .populate({
+      path: 'reactions',
+      populate: {
+        path: 'author',
+        select: ['name']
+      }
+    })
 }
 
-async function deleteById(idPost) {
-  const postFound = await Post.findById(idPost);
-  if (!postFound) throw new StatusHttp("Post not found");
-  return Post.findByIdAndDelete(idPost);
+async function deleteById (idPost) {
+  const postFound = await Post.findById(idPost)
+  if (!postFound) throw new StatusHttp('Post not found')
+  return Post.findByIdAndDelete(idPost)
 }
 
-export { getAll, create, update, deleteById, getById };
+export { getAll, create, update, deleteById, getById }

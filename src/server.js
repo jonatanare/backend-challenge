@@ -18,7 +18,6 @@ server.use('/auth', authRouter)
 server.use('/comments', commentsRouter)
 server.use('/reactions', reactionsRouter)
 
-
 // middleware - handleErrors
 server.use(handleErrors)
 

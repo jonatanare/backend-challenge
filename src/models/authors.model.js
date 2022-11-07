@@ -9,7 +9,7 @@ const authorSchema = new mongoose.Schema({
     trim: true
   },
   username: {
-    type: String, 
+    type: String,
     required: false
   },
   biography: {
