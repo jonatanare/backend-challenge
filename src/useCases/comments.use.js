@@ -8,12 +8,12 @@ async function getAll () {
 
 async function getById (idComment) {
   const commentFound = await Comment.findById(idComment)
-  if (!commentFound) throw new StatusHttp('Post not found', 400)
+  if (!commentFound) {
+    throw new StatusHttp('Post not found', 400)}
   return Comment.findById(idComment)
 }
 
 async function addComment (newComment, userCurrent) {
-  console.log({ ...newComment, author: userCurrent })
   const commentCreated = await Comment.create({ ...newComment, author: userCurrent })
   await Post.findByIdAndUpdate(newComment.post_id, {
     $push: { comments: commentCreated._id }
@@ -23,13 +23,15 @@ async function addComment (newComment, userCurrent) {
 
 async function deleteById (idComment) {
   const commentFound = await Comment.findById(idComment)
-  if (!commentFound) throw new StatusHttp('Comment not found', 400)
+  if (!commentFound) {
+    throw new StatusHttp('Comment not found', 400)}
   return Comment.findByIdAndDelete(idComment)
 }
 
 async function update (idComment, unupdatedComment) {
   const commentFound = await Comment.findById(idComment)
-  if (!commentFound) throw new StatusHttp('Comment not found', 400)
+  if (!commentFound) {
+    throw new StatusHttp('Comment not found', 400)}
   return Comment.findByIdAndUpdate(idComment, unupdatedComment, { new: true })
 }
 

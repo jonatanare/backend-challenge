@@ -18,7 +18,6 @@ router.get('/', async (request, response, next) => {
       }
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -29,7 +28,7 @@ router.get('/:id', async (request, response, next) => {
     const { id } = request.params
     const getComment = await commentUseCase.getById(id)
     response.json({
-      succes: true,
+      success: true,
       message: 'Post found',
       data: {
         post: getComment
@@ -46,17 +45,14 @@ router.post('/', auth, async (request, response, next) => {
     const { body: comment } = request
     const token = request.headers.authorization
     const { id } = jwt_decode(token)
-    console.log(id)
     const newComment = await commentUseCase.addComment(comment, id)
 
-    console.log(newComment)
     response.json({
-      succes: true,
+      success: true,
       message: 'Comment published',
       data: newComment
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -67,12 +63,11 @@ router.delete('/:id', auth, accessOwnerPostsOrComments, async (request, response
     const { id } = request.params
     const commentDeleted = await commentUseCase.deleteById(id)
     response.json({
-      succes: true,
-      message: 'Comment deleted',
-      data: commentDeleted
+      success: true,
+      message: 'Comment deleted'
+
     })
   } catch (error) {
-    console.log(error)
     next(error)
   }
 })
@@ -86,7 +81,7 @@ router.patch('/:id', auth, accessOwnerPostsOrComments, async (request, response,
 
     response.json({
       success: true,
-      message: 'comment updated',
+      message: 'Comment updated',
       data: {
         comment: commentUpdated
       }

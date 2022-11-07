@@ -28,7 +28,7 @@ const postSchema = new mongoose.Schema({
     trim: true
   },
   hashtags: {
-    type: [String], 
+    type: [String],
     required: false,
     default: [],
     minLength: 3,
@@ -47,14 +47,13 @@ const postSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Author'
-  }, 
+  },
   slug: {
-    type: String, 
+    type: String,
     required: false
   },
-  reactions: 
+  reactions:
     [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reaction' }]
-  
 
 })
 
