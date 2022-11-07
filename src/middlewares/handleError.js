@@ -1,6 +1,6 @@
 function handleErrors (error, request, response, next) {
   response.status(error.status || 500).json({
-    succes: false,
+    success: false,
     message: error.message
   })
 }
