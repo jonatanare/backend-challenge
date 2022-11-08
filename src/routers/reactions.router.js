@@ -28,7 +28,7 @@ router.get('/:id', auth, async (request, response, next) => {
     const { id } = request.params
     const getReaction = await reactionsUseCase.getById(id)
     response.json({
-      succes: true,
+      success: true,
       message: 'Reaction found',
       data: {
         reaction: getReaction
@@ -48,7 +48,7 @@ router.patch('/:id', auth, async (request, response, next) => {
     const postLiked = await reactionsUseCase.addReaction(id, userCurrent)
 
     response.json({
-      succes: true,
+      success: true,
       message: 'Like!',
       data: {
         post: postLiked
