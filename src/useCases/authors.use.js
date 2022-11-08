@@ -37,7 +37,7 @@ async function getById (idAuthor) {
   }
   return Author.findById(authorFound).populate({
     path: 'posts',
-    select: ['title']
+    select: ['title', 'createdAt', 'reactions']
   })
 }
 
